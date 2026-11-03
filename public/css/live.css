@@ -799,6 +799,32 @@ body.obs-mode .stage-wrapper {
   72% { transform: translateY(-2px) rotate(0.3deg) scaleX(-1.006) scaleY(1.006); }
 }
 
+/* Thay ca tự nhiên: khi khách mới vào, một thiện tín nền đi ra qua lối bên. */
+.hall-seat.hall-seat--departing {
+  pointer-events: none;
+  animation: hallDevoteeLeaveLeft 3s cubic-bezier(.3,.72,.28,1) forwards !important;
+}
+.hall-seat.hall-seat--departing-right {
+  animation-name: hallDevoteeLeaveRight !important;
+}
+.hall-seat--departing .devotee-sprite {
+  animation: departingBusinessmanStep 420ms ease-in-out infinite alternate !important;
+}
+@keyframes hallDevoteeLeaveLeft {
+  0% { opacity: 1; transform: translate(-50%, -100%) scale(var(--seat-scale)); }
+  22% { opacity: 1; transform: translate(-70%, -86%) scale(var(--seat-scale)); }
+  100% { opacity: 0; transform: translate(-390px, 170px) scale(.52); }
+}
+@keyframes hallDevoteeLeaveRight {
+  0% { opacity: 1; transform: translate(-50%, -100%) scale(var(--seat-scale)); }
+  22% { opacity: 1; transform: translate(-30%, -86%) scale(var(--seat-scale)); }
+  100% { opacity: 0; transform: translate(300px, 170px) scale(.52); }
+}
+@keyframes departingBusinessmanStep {
+  from { transform: translateY(0) rotate(-2deg); }
+  to { transform: translateY(-6px) rotate(2deg); }
+}
+
 .seat-badge {
   position: absolute;
   top: -26px;

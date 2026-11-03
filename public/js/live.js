@@ -114,12 +114,12 @@
     }).join('');
   }
 
-  // 5. Dựng 40 thiện tín đứng hai bên thảm đỏ (5 hàng x 4 cột mỗi bên)
+  // 5. Dựng 24 thiện tín nền đứng hai bên thảm đỏ (3 hàng x 4 cột mỗi bên)
   const congregationHall = document.getElementById('congregationHall');
   const HALL_SEAT_COORDS = [];
 
   (function buildHallGrid() {
-    const rows = 5;
+    const rows = 3;
     const colsPerSide = 4;
     for (let r = 0; r < rows; r++) {
       const progress = r / (rows - 1); // 0 (xa) -> 1 (gần)
@@ -186,7 +186,7 @@
         <div
           class="hall-seat ${seat.side === 'R' ? 'hall-seat--right' : ''}"
           data-seat-idx="${idx}"
-          style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${20 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
+          style="--seat-scale: ${seat.scale}; left: ${seat.x}px; top: ${seat.y}px; z-index: ${20 + seat.row * 2}; transform: translate(-50%, -100%) scale(var(--seat-scale));"
         >
           <img
             src="/assets/businessman_waiting.png"
@@ -222,6 +222,8 @@
     const layer = document.getElementById('carpetWalkerLayer');
     if (!layer) return;
 
+    sendOneHallDevoteeOut();
+
     const fromRight = Math.random() >= 0.5;
     const passer = document.createElement('div');
     passer.className = `temple-passer ${fromRight ? 'temple-passer--right' : 'temple-passer--left'}`;
@@ -234,6 +236,17 @@
     `;
     layer.appendChild(passer);
     setTimeout(() => passer.remove(), 14500);
+  }
+
+  function sendOneHallDevoteeOut() {
+    const seated = Array.from(document.querySelectorAll('.hall-seat:not(.hall-seat--departing)'));
+    // Luôn giữ lại một nhóm thiện tín nền nhỏ, phần còn lại thay ca theo khách mới vào.
+    if (seated.length <= 12) return;
+
+    const target = seated[Math.floor(Math.random() * seated.length)];
+    target.classList.add('hall-seat--departing');
+    if (target.classList.contains('hall-seat--right')) target.classList.add('hall-seat--departing-right');
+    setTimeout(() => target.remove(), 3100);
   }
 
   function scheduleTemplePasser(firstRun = false) {
