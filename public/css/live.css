@@ -405,6 +405,38 @@ body.obs-mode .stage-wrapper {
   animation: centralWalkUpCarpet 2.1s linear forwards;
 }
 
+/* Hành trình đầy đủ: xuất hiện từ cuối sân -> chính điện -> rời theo lối bên. */
+.central-worshipper.ritual-hidden {
+  opacity: 0;
+}
+
+.central-worshipper.ritual-enter {
+  animation: centralRitualEnter 1.95s cubic-bezier(0.22, 0.8, 0.26, 1) both;
+}
+
+.central-worshipper.ritual-enter .pose-frame.active {
+  animation: centralWalkingStep 430ms ease-in-out infinite alternate;
+}
+
+.central-worshipper.ritual-at-altar::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: 6px;
+  width: 235px;
+  height: 68px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  border: 2px solid rgba(255, 210, 105, 0.85);
+  background: radial-gradient(ellipse, rgba(255, 206, 83, 0.32) 0%, rgba(255, 155, 35, 0.1) 44%, transparent 70%);
+  animation: altarArrivalRing 1.15s ease-out 2;
+}
+
+.central-worshipper.ritual-exit {
+  animation: centralRitualExit 1.45s cubic-bezier(0.45, 0, 0.8, 0.35) forwards;
+}
+
 .central-worshipper.vip-ritual::before {
   content: '';
   position: absolute;
@@ -430,6 +462,44 @@ body.obs-mode .stage-wrapper {
   }
   100% {
     transform: translate3d(-50%, 0px, 0) scale(1);
+  }
+}
+
+@keyframes centralRitualEnter {
+  0% {
+    opacity: 0;
+    transform: translate3d(-50%, 560px, 0) scale(0.58);
+  }
+  12% { opacity: 1; }
+  72% {
+    opacity: 1;
+    transform: translate3d(-50%, 105px, 0) scale(0.91);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+}
+
+@keyframes centralWalkingStep {
+  0% { transform: translateX(-50%) translateY(0) rotate(-1deg); }
+  100% { transform: translateX(-50%) translateY(-5px) rotate(1deg); }
+}
+
+@keyframes altarArrivalRing {
+  0% { opacity: 0; transform: translateX(-50%) scale(0.52); }
+  35% { opacity: 1; }
+  100% { opacity: 0; transform: translateX(-50%) scale(1.18); }
+}
+
+@keyframes centralRitualExit {
+  0% {
+    opacity: 1;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translate3d(calc(-50% + 255px), 430px, 0) scale(0.62);
   }
 }
 

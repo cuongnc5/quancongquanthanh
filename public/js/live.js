@@ -235,6 +235,13 @@
     }
   }
 
+  function resetCentralJourney({ hidden = false } = {}) {
+    const centralEl = document.getElementById('centralWorshipper');
+    if (!centralEl) return;
+    centralEl.classList.remove('walking-up', 'ritual-enter', 'ritual-at-altar', 'ritual-exit', 'ritual-hidden');
+    if (hidden) centralEl.classList.add('ritual-hidden');
+  }
+
   // Chuyển đổi tức thời sprite nghi thức đã giải mã sẵn trên GPU.
   function setCentralPose(poseKey) {
     const stack = document.getElementById('centralSpriteStack');
@@ -278,36 +285,50 @@
     });
   }
 
-  // Hiệu ứng thiện tín tiến dọc thảm đỏ rồi ôm quyền kính bái Quan Thánh.
+  // Thiện tín xuất hiện từ cuối sân, tiến theo thảm đỏ, kính bái rồi rời qua lối bên phải.
   function animateWalkerOnCarpet(user, avatar, actionLabel, wish, isVip = false) {
     const centralEl = document.getElementById('centralWorshipper');
     if (!centralEl) return;
 
     clearRitualTimers();
+    resetCentralJourney();
     updateCentralWorshipper(user, avatar, actionLabel, wish, false);
     setCentralRitualSprite(isVip);
 
-    // Khởi động bước đi từ cuối thảm đỏ lên chính điện
-    centralEl.classList.remove('walking-up');
+    // Buộc trình duyệt ghi nhận trạng thái ẩn trước khi người mới tiến vào sân miếu.
     void centralEl.offsetWidth;
-    centralEl.classList.add('walking-up');
+    centralEl.classList.add('ritual-enter');
 
     setCentralPose('salute');
 
-    // Khi bước tới trước Lư Hương: dừng lại và thực hiện nghi thức ôm quyền kính bái Quan Thánh.
+    // Đến trước lư hương: dừng lại, ánh sáng hội tụ và thực hiện ba nhịp kính bái.
     ritualTimers.push(
       setTimeout(() => {
-        centralEl.classList.remove('walking-up');
+        centralEl.classList.remove('ritual-enter');
+        centralEl.classList.add('ritual-at-altar');
         particles.spawnBellWave(540, 820, 1);
-      }, 2100)
+      }, 1950)
     );
-    playQuanThanhSaluteSequence(2050);
+    playQuanThanhSaluteSequence(1950);
     ritualTimers.push(
       setTimeout(() => {
         // Hoàn tất ba nhịp kính bái rồi mới cắm hương vào lư đồng.
         particles.spawnIncenseBurst(540, 895);
         particles.spawnBellWave(540, 820, 2);
-      }, 4750)
+      }, 4650)
+    );
+    ritualTimers.push(
+      setTimeout(() => {
+        // Nhường chính điện cho lượt kế tiếp: rời nhẹ theo lối bên phải, không biến mất đột ngột.
+        centralEl.classList.remove('ritual-at-altar');
+        centralEl.classList.add('ritual-exit');
+      }, 5550)
+    );
+    ritualTimers.push(
+      setTimeout(() => {
+        resetCentralJourney({ hidden: true });
+        centralEl.classList.remove('vip-ritual');
+      }, 7000)
     );
   }
 
@@ -334,8 +355,7 @@
 
     if (doQuanThanhSalute) {
       clearRitualTimers();
-      const centralEl = document.getElementById('centralWorshipper');
-      if (centralEl) centralEl.classList.remove('walking-up');
+      resetCentralJourney();
       playQuanThanhSaluteSequence(0);
     }
     if (beam) {
