@@ -49,17 +49,17 @@ body.obs-mode .quick-dock {
    ========================================================================== */
 .stage-wrapper {
   position: relative;
-  height: 96vh;
+  flex: 0 0 auto;
+  width: 540px;
+  height: 960px;
   aspect-ratio: 9 / 16;
   border-radius: 22px;
   overflow: hidden;
   border: 2px solid rgba(244, 193, 80, 0.55);
   background: #120403;
-  contain: layout paint style;
 }
 
 body.obs-mode .stage-wrapper {
-  height: 100vh;
   border-radius: 0;
   border: none;
 }
@@ -73,7 +73,20 @@ body.obs-mode .stage-wrapper {
   transform-origin: top left;
   overflow: hidden;
   background: #120403;
-  contain: strict;
+}
+
+@media (max-width: 800px) {
+  body:not(.obs-mode) .app-workspace {
+    flex-direction: column;
+    gap: 12px;
+    padding: 8px;
+  }
+  body:not(.obs-mode) .quick-dock {
+    flex: 0 1 auto;
+    width: min(100%, 540px);
+    min-height: 0;
+    max-height: 36vh;
+  }
 }
 
 /* 1. HÌNH NỀN MIẾU QUAN CÔNG */
@@ -219,15 +232,17 @@ body.obs-mode .stage-wrapper {
   position: absolute;
   top: 18px;
   left: 338px;
-  right: 24px;
+  right: 338px;
   z-index: 20;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
   pointer-events: none;
 }
 
-/* Góc trái: bảng vinh danh và hướng dẫn tương tác cho người xem TikTok Live. */
+/* Góc trên bên trái: thông báo hành lễ và các box tương tác. */
 .top-left-panel {
   position: absolute;
   z-index: 21;
@@ -1269,6 +1284,7 @@ body.obs-mode .stage-wrapper {
 @keyframes heartPop { 0% { opacity: 0; transform: scale(.3) translateY(70px); } 35%, 75% { opacity: 1; transform: scale(1.15) translateY(0); } 100% { opacity: 0; transform: scale(.9) translateY(-180px); } }
 
 #templeCanvas {
+  background: transparent;
   position: absolute;
   inset: 0;
   width: 1080px;
@@ -1278,51 +1294,39 @@ body.obs-mode .stage-wrapper {
 }
 
 /* ==========================================================================
-   10. THANH HUD GỌN GÀNG DƯỚI ĐÁY
+   10. CÁC BOX TƯƠNG TÁC XẾP DỌC
    ========================================================================== */
-.bottom-hud-bar {
-  position: absolute;
-  bottom: 20px;
-  left: 24px;
-  right: 24px;
-  height: 192px;
-  z-index: 20;
-  display: block;
-}
-
 .hud-left-col {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   gap: 10px;
 }
 
 .hud-active-notice {
-  height: 52px;
-  padding: 0 18px;
+  min-height: 52px;
+  padding: 12px;
   border-radius: 14px;
   background: rgba(34, 10, 6, 0.94);
   border: 1.5px solid rgba(244, 193, 80, 0.65);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
-  font-size: 19px;
+  font-size: 16px;
   color: var(--gold-bright);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  overflow-wrap: anywhere;
+  text-align: center;
 }
 
 .hud-gift-cards {
-  flex: 1;
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .hud-gift-card {
+  min-height: 100px;
   cursor: pointer;
   background: rgba(24, 8, 5, 0.94);
   border: 1.5px solid rgba(244, 193, 80, 0.55);
@@ -1334,6 +1338,25 @@ body.obs-mode .stage-wrapper {
 }
 .hud-gift-card:hover {
   border-color: var(--gold-bright);
+}
+.keyword-prayer-card {
+  gap: 10px;
+}
+.keyword-prayer-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+.keyword-prayer-list > div {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 8px;
+  align-items: start;
+}
+.keyword-prayer-list strong {
+  color: var(--gold-bright);
 }
 .gift-coin-tag {
   font-size: 13px;
@@ -1355,8 +1378,14 @@ body.obs-mode .stage-wrapper {
   color: var(--gold-bright);
 }
 
-/* Bảng TẤM LÒNG THÀNH bên phải đáy */
+/* Bảng Công Đức ở góc trên bên phải. */
 .hud-right-leaderboard {
+  position: absolute;
+  top: 18px;
+  right: 24px;
+  width: 294px;
+  z-index: 21;
+  pointer-events: none;
   background: rgba(22, 7, 4, 0.94);
   border: 1.5px solid rgba(244, 193, 80, 0.65);
   border-radius: 16px;

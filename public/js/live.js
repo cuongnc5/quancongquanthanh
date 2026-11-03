@@ -17,11 +17,31 @@
 
   function fitStage() {
     if (!stageWrapper || !stage9x16) return;
-    const rect = stageWrapper.getBoundingClientRect();
-    const scale = rect.width / 1080;
+    const workspace = stageWrapper.parentElement;
+    const dock = document.getElementById('quickDock');
+    const layout = getComputedStyle(workspace);
+    const frame = getComputedStyle(stageWrapper);
+    const borderX = parseFloat(frame.borderLeftWidth) + parseFloat(frame.borderRightWidth);
+    const borderY = parseFloat(frame.borderTopWidth) + parseFloat(frame.borderBottomWidth);
+    const availableWidth = workspace.clientWidth - parseFloat(layout.paddingLeft) - parseFloat(layout.paddingRight);
+    const availableHeight = workspace.clientHeight - parseFloat(layout.paddingTop) - parseFloat(layout.paddingBottom);
+    const hasDock = dock && getComputedStyle(dock).display !== 'none';
+    const stacked = hasDock && layout.flexDirection === 'column';
+    const widthLimit = availableWidth - (hasDock && !stacked ? dock.offsetWidth + parseFloat(layout.columnGap) : 0);
+    const heightLimit = stacked ? Math.min(availableHeight, window.innerHeight * 0.6) : availableHeight;
+    const targetScale = Math.max(0.01, Math.min((widthLimit - borderX) / 1080, (heightLimit - borderY) / 1920));
+    stageWrapper.style.width = `${Math.floor(1080 * targetScale) + borderX}px`;
+    stageWrapper.style.height = `${Math.floor(1920 * targetScale) + borderY}px`;
+    const scale = Math.min(stageWrapper.clientWidth / 1080, stageWrapper.clientHeight / 1920);
+    if (scale <= 0) return;
     stage9x16.style.transform = `scale(${scale})`;
   }
   window.addEventListener('resize', fitStage);
+  if ('ResizeObserver' in window) {
+    const stageResizeObserver = new ResizeObserver(fitStage);
+    stageResizeObserver.observe(stageWrapper.parentElement);
+  }
+  window.addEventListener('load', fitStage);
   fitStage();
 
   // 2. Khởi tạo Particle Engine & Audio Engine (ZeroTTS Mai Chi)
@@ -469,7 +489,7 @@
       );
     }
 
-    // Cập nhật Bảng TẤM LÒNG THÀNH ở góc dưới phải (Top 4)
+    // Cập nhật bảng Công Đức ở góc trên bên phải (Top 4)
     const lbList = document.getElementById('leaderboardList');
     if (lbList) {
       lbList.innerHTML = lb

@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,600;0,700;0,800;1,400&family=Noto+Serif:wght@700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/css/live.css" />
+  <link rel="stylesheet" href="/css/live.css?v=20261103-canvas-alpha" />
 </head>
 <body>
   <div class="app-workspace">
@@ -44,18 +44,10 @@
           </div>
         </header>
 
-        <!-- Góc trái: Bảng vinh danh và hướng dẫn tương tác Live -->
-        <aside class="top-left-panel">
-          <div class="hud-right-leaderboard">
-            <div class="hud-lb-header">TẤM LÒNG THÀNH</div>
+        <!-- Góc trên bên phải: Bảng Công Đức -->
+        <aside class="hud-right-leaderboard">
+            <div class="hud-lb-header">CÔNG ĐỨC</div>
             <div class="hud-lb-list" id="leaderboardList"></div>
-          </div>
-          <div class="top-left-guide">
-            <div class="top-left-guide-title">📣 HƯỚNG DẪN TƯƠNG TÁC</div>
-            <div><b>1</b><span id="commentPrayerOneLabel">Ngày mới vui vẻ</span></div>
-            <div><b>2</b><span id="commentPrayerTwoLabel">Ngày mới mua may bán đắt</span></div>
-            <div class="top-left-gift-tip">🎁 Mọi quà TikTok đều kích hoạt <strong>Đại Lễ Kim Long</strong></div>
-          </div>
         </aside>
 
         <!-- 3. CỘT SÁNG TÂM HƯƠNG & LƯ HƯƠNG TRUNG TÂM -->
@@ -116,9 +108,9 @@
         <!-- 9. LỚP CANVAS HIỆU ỨNG KHÓI HƯƠNG, HOA SEN RƠI & SÓNG ÂM -->
         <canvas id="templeCanvas"></canvas>
 
-        <!-- 10. THANH HUD GỌN GÀNG DƯỚI ĐÁY (GIỐNG MẪU THAM CHIẾU) -->
-        <footer class="bottom-hud-bar">
-          <!-- Bên trái: Thông báo hành lễ + 3 ô hướng dẫn tương tác -->
+        <!-- 10. CỘT THÔNG BÁO VÀ CÁC BOX Ở GÓC TRÊN BÊN TRÁI -->
+        <aside class="top-left-panel">
+          <!-- Thông báo hành lễ và các box xếp dọc -->
           <div class="hud-left-col">
             <div class="hud-active-notice" id="hudActiveNotice">
               <span class="flower-bullet">💮</span>
@@ -145,8 +137,18 @@
                 </div>
               </div>
 
+              <div class="hud-gift-card keyword-prayer-card">
+                <div class="gift-coin-tag">BÌNH LUẬN ĐỂ ĐƯỢC CẦU</div>
+                <div class="keyword-prayer-list">
+                  <div><strong>mua</strong><span>Cầu mua may bán đắt</span></div>
+                  <div><strong>bán</strong><span>Bán hết hàng về sớm đi miếu</span></div>
+                  <div><strong>tín</strong><span>Cầu mong tín nhiệm anh em</span></div>
+                  <div><strong>nghĩa</strong><span>Cầu nghĩa khí anh em mãi bền chặt</span></div>
+                </div>
+              </div>
+
               <div class="hud-gift-card" id="cardLotus" title="Bất kỳ quà TikTok nào cũng kích hoạt Đại Lễ Kim Long chầu Quan Thánh">
-                <div class="gift-coin-tag">MỌI QUÀ = ĐẠI LỄ</div>
+                <div class="gift-coin-tag">Tặng quà = ĐẠI LỄ</div>
                 <div class="gift-card-body">
                   <span class="gift-emoji">🐉</span>
                   <span class="gift-title">Kim Long</span>
@@ -155,7 +157,7 @@
             </div>
           </div>
 
-        </footer>
+        </aside>
 
         <!-- BANNER ĐẠI LỄ KIM LONG CHẦU QUAN THÁNH -->
         <div class="grand-ceremony-banner" id="grandCeremonyBanner">
@@ -213,7 +215,7 @@
       <div class="dock-section">
         <div class="dock-section-title">📡 Kết Nối Phòng TikTok Live</div>
         <div class="dock-input-row">
-          <input type="text" id="inputTikTokUser" class="dock-input" value="@zenfacts_vn" placeholder="Nhập @username hoặc link TikTok Live..." />
+          <input type="text" id="inputTikTokUser" class="dock-input" value="@cuongeuro6868" placeholder="Nhập @username hoặc link TikTok Live..." />
           <button class="dock-btn gold" id="btnConnectTikTok">Kết Nối</button>
         </div>
         <button class="dock-btn" id="btnToggleAutoSim">
@@ -265,7 +267,7 @@
   </div>
 
   <script src="/js/audio.js"></script>
-  <script src="/js/particles.js"></script>
-  <script src="/js/live.js"></script>
+  <script src="/js/particles.js?v=20261103-canvas-alpha"></script>
+  <script src="/js/live.js?v=20261103-workspace-fit"></script>
 </body>
 </html>

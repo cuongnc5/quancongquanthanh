@@ -128,7 +128,7 @@ curl -X POST http://localhost:3000/rpc \
     "id": 3,
     "method": "live.connect",
     "params": {
-      "username": "@zenfacts_vn"
+      "username": "@cuongeuro6868"
     }
   }'
 ```

@@ -232,11 +232,13 @@ class ZeroTTSManager {
 
   resolvePythonBin() {
 
-    const venvPy = path.join(__dirname, '.venv', 'bin', 'python');
+    const venvPy = process.platform === 'win32'
+      ? path.join(__dirname, '.venv', 'Scripts', 'python.exe')
+      : path.join(__dirname, '.venv', 'bin', 'python');
 
     if (fs.existsSync(venvPy)) return venvPy;
 
-    return 'python3';
+    return process.platform === 'win32' ? 'python' : 'python3';
 
   }
 
@@ -254,7 +256,8 @@ class ZeroTTSManager {
 
       cwd: __dirname,
 
-      stdio: ['pipe', 'pipe', 'pipe']
+      stdio: ['pipe', 'pipe', 'pipe'],
+      env: { ...process.env, PYTHONIOENCODING: 'utf-8' }
 
     });
 
@@ -1313,6 +1316,13 @@ let tiktokConn = null;
 
 const commentCooldownMap = new Map();
 
+const COMMENT_KEYWORD_PRAYERS = new Map([
+  ['mua', 'Cầu mua may bán đắt'],
+  ['bán', 'Bán hết hàng về sớm đi miếu'],
+  ['tín', 'Cầu mong tín nhiệm anh em'],
+  ['nghĩa', 'Cầu nghĩa khí anh em mãi bền chặt']
+]);
+
 function parseViewerComment(commentText, user, uniqueId, avatar) {
 
   const raw = String(commentText || '').trim();
@@ -1323,13 +1333,16 @@ function parseViewerComment(commentText, user, uniqueId, avatar) {
 
   }
 
+  const keyword = raw.normalize('NFC').toLocaleLowerCase('vi-VN').replace(/[.!?]+$/u, '').trim();
+  const keywordWish = COMMENT_KEYWORD_PRAYERS.get(keyword);
+
   // Bình luận đúng số 1 hoặc 2 sẽ dùng câu nguyện do Admin cấu hình.
   const commentChoice = raw.match(/^\s*([12])\s*[.!]?\s*$/)?.[1] || '';
   const configuredWish = commentChoice === '1'
     ? state.settings.commentPrayerOne
     : commentChoice === '2'
       ? state.settings.commentPrayerTwo
-      : raw;
+      : keywordWish || raw;
   const cleanWish = sanitizeWishText(configuredWish);
 
   if (!cleanWish || cleanWish.length < 3) {
@@ -1367,6 +1380,10 @@ function parseViewerComment(commentText, user, uniqueId, avatar) {
   }
 
   const cleanUser = sanitizeUserName(user);
+
+  if (keywordWish) {
+    return Rituals.sendPrayer({ user: cleanUser, uniqueId, avatar, wish: cleanWish, readTts: true });
+  }
 
   const lower = cleanWish.toLowerCase();
 
@@ -2327,7 +2344,7 @@ server.listen(PORT, () => {
   // Tiếp tục giả lập sau khi khởi động lại nếu người quản trị đã bật chế độ này.
   if (state.settings.autoSim) configureAutoSim(true);
 
-  // Tự động kết nối tới @zenfacts_vn ngay khi khởi động server
+  // Tự động kết nối tới @cuongeuro6868 ngay khi khởi động server
 
   const defaultChannel = process.env.TIKTOK_USER || state.tiktok?.username || 'zenfacts_vn';
 
