@@ -447,6 +447,10 @@
       btnAutoSim.classList.toggle('active-toggle', Boolean(st.settings.autoSim));
     }
     if (st.settings) {
+      const commentPrayerOne = document.getElementById('commentPrayerOneLabel');
+      const commentPrayerTwo = document.getElementById('commentPrayerTwoLabel');
+      if (commentPrayerOne) commentPrayerOne.textContent = st.settings.commentPrayerOne || 'Ngày mới vui vẻ';
+      if (commentPrayerTwo) commentPrayerTwo.textContent = st.settings.commentPrayerTwo || 'Ngày mới mua may bán đắt';
       if (typeof st.settings.musicVolume === 'number') {
         audio.setMusicVolume(st.settings.musicVolume);
         const sMus = document.getElementById('sliderMusicVol');

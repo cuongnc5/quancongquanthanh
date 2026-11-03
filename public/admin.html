@@ -190,7 +190,19 @@
       </section>
 
       <section class="card">
-        <h2>🔌 4. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</h2>
+        <h2>🔢 4. Cầu Nguyện Bằng Bình Luận Số</h2>
+        <p style="font-size: 13px; color: var(--muted); line-height: 1.5;">
+          Người xem bình luận đúng <code>1</code> hoặc <code>2</code> sẽ tự động dâng lời nguyện tương ứng. Nội dung này hiển thị trên màn hình Live.
+        </p>
+        <label for="commentPrayerOne" style="font-weight: 700; color: var(--gold-light);">Bình luận 1</label>
+        <textarea id="commentPrayerOne" rows="2" maxlength="120" autocomplete="off">Kính nguyện ngày mới vui vẻ, tinh thần an vui, mọi việc thuận hòa</textarea>
+        <label for="commentPrayerTwo" style="font-weight: 700; color: var(--gold-light);">Bình luận 2</label>
+        <textarea id="commentPrayerTwo" rows="2" maxlength="120" autocomplete="off">Kính nguyện ngày mới mua may bán đắt, cửa hàng đông khách, tài lộc hanh thông</textarea>
+        <button class="btn gold" id="btnSaveCommentPrayers">💾 Lưu Câu Cầu Nguyện Số 1 & 2</button>
+      </section>
+
+      <section class="card">
+        <h2>🔌 5. Nhật Ký Phản Hồi JSON-RPC 2.0 (`/rpc`)</h2>
         <pre id="rpcOutput">{ "status": "Sẵn sàng nhận lệnh JSON-RPC 2.0" }</pre>
       </section>
     </div>
@@ -203,7 +215,7 @@
     // Trình duyệt có thể khôi phục giá trị input từ phiên trước qua bfcache.
     // Chuẩn hóa ngay khi mở/quay lại trang Admin để câu cũ không thể được phát lại.
     function normalizeAdminInvocationFields() {
-      ['ttsDirectText', 'rpcWish', 'simComment'].forEach((id) => {
+      ['ttsDirectText', 'rpcWish', 'simComment', 'commentPrayerOne', 'commentPrayerTwo'].forEach((id) => {
         const input = document.getElementById(id);
         if (input) input.value = input.value.replace(legacyInvocationPattern, quanCongInvocation);
       });
@@ -243,6 +255,12 @@
       const comment = document.getElementById('simComment').value.trim();
       sendRpc('temple.comment', { comment });
     };
+    document.getElementById('btnSaveCommentPrayers').onclick = async () => {
+      const commentPrayerOne = document.getElementById('commentPrayerOne').value.trim();
+      const commentPrayerTwo = document.getElementById('commentPrayerTwo').value.trim();
+      const data = await sendRpc('temple.updateSettings', { commentPrayerOne, commentPrayerTwo });
+      if (data?.result?.settings) hydrateCommentPrayerSettings(data.result.settings, true);
+    };
     document.getElementById('btnSpeakMaiChi').onclick = async () => {
       const text = document.getElementById('ttsDirectText').value.trim();
       const data = await sendRpc('temple.speak', { text, voice: 'maichi', broadcast: true });
@@ -253,9 +271,20 @@
       }
     };
 
+    let commentPrayerSettingsLoaded = false;
+    function hydrateCommentPrayerSettings(settings, force = false) {
+      if (!settings || (commentPrayerSettingsLoaded && !force)) return;
+      const one = document.getElementById('commentPrayerOne');
+      const two = document.getElementById('commentPrayerTwo');
+      if (one && settings.commentPrayerOne) one.value = settings.commentPrayerOne;
+      if (two && settings.commentPrayerTwo) two.value = settings.commentPrayerTwo;
+      commentPrayerSettingsLoaded = true;
+    }
+
     async function refreshStatus() {
       const res = await fetch('/api/state');
       const st = await res.json();
+      hydrateCommentPrayerSettings(st.settings);
       document.getElementById('statusBanner').textContent =
         `Hương đã thắp: ${st.totalIncense} | Tổng Công Đức: ${st.totalMerit} | ZeroTTS: ${st.tts?.status} (Giọng: ${st.tts?.voice})`;
     }

@@ -500,7 +500,11 @@ const DEFAULT_STATE = {
 
     autoSim: false,
 
-    autoSimIntervalMs: 7200
+    autoSimIntervalMs: 7200,
+
+    commentPrayerOne: 'Kính nguyện ngày mới vui vẻ, tinh thần an vui, mọi việc thuận hòa',
+
+    commentPrayerTwo: 'Kính nguyện ngày mới mua may bán đắt, cửa hàng đông khách, tài lộc hanh thông'
 
   },
 
@@ -1231,13 +1235,27 @@ const Rituals = {
 
   updateSettings(params = {}) {
 
+    const { commentPrayerOne, commentPrayerTwo, ...otherSettings } = params;
+
     state.settings = {
 
       ...state.settings,
 
-      ...params
+      ...otherSettings
 
     };
+
+    if (typeof commentPrayerOne === 'string') {
+
+      state.settings.commentPrayerOne = sanitizeWishText(commentPrayerOne) || DEFAULT_STATE.settings.commentPrayerOne;
+
+    }
+
+    if (typeof commentPrayerTwo === 'string') {
+
+      state.settings.commentPrayerTwo = sanitizeWishText(commentPrayerTwo) || DEFAULT_STATE.settings.commentPrayerTwo;
+
+    }
 
     if (typeof params.autoSim === 'boolean') {
 
@@ -1305,7 +1323,14 @@ function parseViewerComment(commentText, user, uniqueId, avatar) {
 
   }
 
-  const cleanWish = sanitizeWishText(raw);
+  // Bình luận đúng số 1 hoặc 2 sẽ dùng câu nguyện do Admin cấu hình.
+  const commentChoice = raw.match(/^\s*([12])\s*[.!]?\s*$/)?.[1] || '';
+  const configuredWish = commentChoice === '1'
+    ? state.settings.commentPrayerOne
+    : commentChoice === '2'
+      ? state.settings.commentPrayerTwo
+      : raw;
+  const cleanWish = sanitizeWishText(configuredWish);
 
   if (!cleanWish || cleanWish.length < 3) {
 

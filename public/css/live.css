@@ -227,6 +227,54 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
 }
 
+/* Lời mời tương tác số 1 / 2, luôn đồng bộ từ cài đặt Admin. */
+.comment-prayer-callout {
+  position: absolute;
+  z-index: 16;
+  top: 102px;
+  left: 50%;
+  width: 820px;
+  min-height: 50px;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 7px 18px;
+  border: 1px solid rgba(255, 218, 122, 0.72);
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(42, 7, 4, 0.84), rgba(104, 25, 9, 0.93), rgba(42, 7, 4, 0.84));
+  box-shadow: 0 0 26px rgba(231, 161, 45, 0.24);
+  color: var(--gold-bright);
+  pointer-events: none;
+}
+
+.comment-prayer-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  font-size: 15px;
+}
+
+.comment-prayer-option b {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--gold-main);
+  color: #3a0b05;
+  font-size: 16px;
+}
+
+.comment-prayer-option em {
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.comment-prayer-divider { color: rgba(255, 239, 178, 0.7); }
+
 .top-Right-badges {
   display: flex;
   align-items: center;
