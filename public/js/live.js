@@ -757,34 +757,10 @@
     callRpc('temple.burnIncense', { user, count: 3, wish });
   });
 
-  document.getElementById('btnRpcLantern')?.addEventListener('click', () => {
-    const { user, wish } = getFormInput();
-    callRpc('temple.sendPrayer', { user, wish });
-  });
-
-  document.getElementById('btnRpcWoodenFish')?.addEventListener('click', () => {
-    const { user } = getFormInput();
-    callRpc('temple.strikeWoodenFish', { user, count: 5 });
-  });
-
-  document.getElementById('btnRpcBell')?.addEventListener('click', () => {
-    const { user, wish } = getFormInput();
-    callRpc('temple.ringBell', { user, count: 1, wish, readTts: true });
-  });
-
-  document.getElementById('btnRpcFortune')?.addEventListener('click', () => {
-    const { user, wish } = getFormInput();
-    callRpc('temple.drawFortune', { user, topic: wish });
-  });
-
-  document.getElementById('btnRpcGiftLotus')?.addEventListener('click', () => {
-    const { user, wish } = getFormInput();
-    callRpc('temple.offerGift', {
-      user,
-      giftType: 'lotus',
-      coins: 20,
-      giftName: 'Đài Hoa Sen Vàng',
-      wish
+  document.querySelectorAll('.prayer-preset-btn').forEach((button) => {
+    button.addEventListener('click', () => {
+      const { user } = getFormInput();
+      callRpc('temple.sendPrayer', { user, wish: button.dataset.prayer || '' });
     });
   });
 
