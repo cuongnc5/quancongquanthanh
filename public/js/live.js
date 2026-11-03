@@ -237,9 +237,13 @@
   }
 
   function scheduleTemplePasser(firstRun = false) {
-    const delay = firstRun ? 8500 : 60000 + Math.floor(Math.random() * 60001);
+    const delay = firstRun ? 5000 : 22000 + Math.floor(Math.random() * 16001);
     setTimeout(() => {
-      spawnTemplePasser();
+      // Mỗi đợt có 2–3 khách đi lệch nhịp để sân miếu luôn có dòng người tự nhiên.
+      const visitorCount = 2 + Math.floor(Math.random() * 2);
+      for (let index = 0; index < visitorCount; index += 1) {
+        setTimeout(spawnTemplePasser, index * (3200 + Math.floor(Math.random() * 1200)));
+      }
       scheduleTemplePasser(false);
     }, delay);
   }
