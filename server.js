@@ -1768,6 +1768,8 @@ async function connectTikTokLive(usernameOrUrl) {
 
     console.log(`[TikTok Gift] ${user} gửi \({displayGiftName} (\){totalCoins} xu)`);
 
+    // Mọi quà TikTok đều được tôn vinh bằng Đại Lễ Kim Long, không phân biệt mệnh giá.
+    // Giữ nguyên tổng xu thực tế để điểm công đức vẫn phản ánh đúng giá trị quà.
     Rituals.offerGift({
 
       user,
@@ -1776,9 +1778,11 @@ async function connectTikTokLive(usernameOrUrl) {
 
       avatar,
 
+      giftType: 'dragon',
+
       coins: totalCoins,
 
-      giftName: displayGiftName,
+      giftName: `Đại Lễ Kim Long • ${displayGiftName}`,
 
       wish: `Thành tâm dâng ${displayGiftName} kính lễ Quan Thánh Đế Quân`
 

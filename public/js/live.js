@@ -815,11 +815,10 @@
 
   document.getElementById('cardLotus')?.addEventListener('click', () => {
     const { user, wish } = getFormInput();
-    callRpc('temple.offerGift', {
+    callRpc('temple.grandCeremony', {
       user,
-      giftType: 'lotus',
       coins: 3,
-      giftName: 'Đài Hoa Sen Vàng',
+      giftName: 'Đại Lễ Kim Long chầu Quan Thánh',
       wish
     });
   });
