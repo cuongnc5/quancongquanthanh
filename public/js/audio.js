@@ -1,6 +1,6 @@
 /**
  * TempleAudioEngine
- * - Nhạc nền: Phát trực tiếp file nền nghi thức (/assets/bg_chant.m4a) lặp vô tận êm dịu,
+ * - Nhạc nền: Phát trực tiếp nhạc thỉnh Quan Công (/assets/nhacthinhquancong.mp3) lặp vô tận êm dịu,
  *   tự động hạ nhỏ âm lượng (ducking) khi có giọng đọc lời khấn để không bị đè tiếng hay rè/xước.
  * - Pháp khí: Tổng hợp tiếng Mõ gỗ, Đại Hồng Chung, Ống xăm nhẹ nhàng, không vượt ngưỡng 0dBFS.
  * - Giọng đọc: Hàng đợi ZeroTTS phát tuần tự mượt mà.
@@ -22,7 +22,7 @@ class TempleAudioEngine {
 
     this.useSynthMusicFallback = false;
     this.synthBgTimer = null;
-    this.bgAudio = new Audio('/assets/bg_chant.m4a');
+    this.bgAudio = new Audio('/assets/nhacthinhquancong.mp3');
     this.bgAudio.loop = true;
     this.bgAudio.preload = 'auto';
     this.bgAudio.volume = this.bgBaseVolume;
