@@ -226,8 +226,11 @@
     const passer = document.createElement('div');
     passer.className = `temple-passer ${fromRight ? 'temple-passer--right' : 'temple-passer--left'}`;
     passer.innerHTML = `
+      <span class="temple-passer-ribbon"></span>
+      <span class="temple-passer-floor-glow"></span>
       <div class="temple-passer-name">${escapeHtml(nextPasserName())}</div>
       <img src="${SPRITE_FRAMES.waiting}" alt="Doanh nhân vãng lai vào miếu" class="devotee-sprite waiting-businessman" />
+      <div class="temple-passer-sparks"><i>✦</i><i>✦</i><i>✦</i></div>
     `;
     layer.appendChild(passer);
     setTimeout(() => passer.remove(), 14500);

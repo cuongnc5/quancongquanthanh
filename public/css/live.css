@@ -880,11 +880,13 @@ body.obs-mode .stage-wrapper {
   will-change: transform, opacity;
 }
 .temple-passer .devotee-sprite {
+  position: relative;
+  z-index: 2;
   width: 118px;
   height: 185px;
   object-fit: contain;
   transform-origin: bottom center;
-  animation: passerStride 520ms ease-in-out infinite alternate;
+  animation: passerCeremonialWalk 13.8s ease-in-out both;
 }
 .temple-passer--left {
   left: 185px;
@@ -895,9 +897,11 @@ body.obs-mode .stage-wrapper {
   animation: passerCrossFromRight 13.8s cubic-bezier(.25,.72,.25,1) forwards;
 }
 .temple-passer--right .devotee-sprite {
-  animation-name: passerStrideMirrored;
+  animation-name: passerCeremonialWalkMirrored;
 }
 .temple-passer-name {
+  position: relative;
+  z-index: 3;
   max-width: 155px;
   margin-bottom: -3px;
   padding: 5px 10px;
@@ -912,29 +916,99 @@ body.obs-mode .stage-wrapper {
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.temple-passer-ribbon {
+  position: absolute;
+  z-index: 0;
+  left: 50%;
+  bottom: 20px;
+  width: 96px;
+  height: 420px;
+  transform: translateX(-50%) perspective(320px) rotateX(64deg);
+  transform-origin: bottom;
+  background: linear-gradient(0deg, rgba(255, 202, 74, .04), rgba(255, 221, 128, .58), rgba(255, 202, 74, 0));
+  clip-path: polygon(38% 100%, 62% 100%, 56% 0, 44% 0);
+  animation: passerRibbonFlow 13.8s ease-in-out both;
+}
+.temple-passer-floor-glow {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 0;
+  width: 180px;
+  height: 45px;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 218, 112, .7), rgba(255, 163, 45, .14) 48%, transparent 72%);
+  animation: passerFloorGlow 13.8s ease-in-out both;
+}
+.temple-passer-sparks {
+  position: absolute;
+  z-index: 4;
+  inset: 8px -22px 20px;
+  pointer-events: none;
+}
+.temple-passer-sparks i {
+  position: absolute;
+  bottom: 25px;
+  color: #ffe89a;
+  font-style: normal;
+  font-size: 19px;
+  opacity: 0;
+  animation: passerExitSpark 13.8s ease-out both;
+}
+.temple-passer-sparks i:nth-child(1) { left: 5px; }
+.temple-passer-sparks i:nth-child(2) { left: 58px; animation-delay: .18s; }
+.temple-passer-sparks i:nth-child(3) { right: 4px; animation-delay: .34s; }
 @keyframes passerCrossFromLeft {
-  0% { opacity: 0; transform: translate3d(-310px, 270px, 0) scale(.58); }
+  0% { opacity: 0; transform: translate3d(-330px, 355px, 0) scale(.54); }
   9% { opacity: 1; }
-  39% { opacity: 1; transform: translate3d(80px, 48px, 0) scale(.88); }
-  54% { opacity: 1; transform: translate3d(115px, 24px, 20px) scale(.94); }
-  61% { opacity: 1; transform: translate3d(135px, 42px, 0) scale(.9); }
-  100% { opacity: 0; transform: translate3d(650px, 300px, 0) scale(.56); }
+  31% { opacity: 1; transform: translate3d(42px, 20px, 0) scale(.84); }
+  49% { opacity: 1; transform: translate3d(148px, -338px, 35px) scale(.76); }
+  59% { opacity: 1; transform: translate3d(148px, -348px, 35px) scale(.76); }
+  71% { opacity: 1; transform: translate3d(286px, -185px, 0) scale(.73); }
+  100% { opacity: 0; transform: translate3d(675px, 390px, 0) scale(.52); }
 }
 @keyframes passerCrossFromRight {
-  0% { opacity: 0; transform: translate3d(310px, 270px, 0) scale(.58); }
+  0% { opacity: 0; transform: translate3d(330px, 355px, 0) scale(.54); }
   9% { opacity: 1; }
-  39% { opacity: 1; transform: translate3d(-80px, 48px, 0) scale(.88); }
-  54% { opacity: 1; transform: translate3d(-115px, 24px, 20px) scale(.94); }
-  61% { opacity: 1; transform: translate3d(-135px, 42px, 0) scale(.9); }
-  100% { opacity: 0; transform: translate3d(-650px, 300px, 0) scale(.56); }
+  31% { opacity: 1; transform: translate3d(-42px, 20px, 0) scale(.84); }
+  49% { opacity: 1; transform: translate3d(-148px, -338px, 35px) scale(.76); }
+  59% { opacity: 1; transform: translate3d(-148px, -348px, 35px) scale(.76); }
+  71% { opacity: 1; transform: translate3d(-286px, -185px, 0) scale(.73); }
+  100% { opacity: 0; transform: translate3d(-675px, 390px, 0) scale(.52); }
 }
-@keyframes passerStride {
-  from { transform: translateY(0) rotate(-1.4deg); }
-  to { transform: translateY(-5px) rotate(1.4deg); }
+@keyframes passerCeremonialWalk {
+  0%, 10% { transform: translateY(0) rotate(-1.5deg); }
+  22%, 36% { transform: translateY(-5px) rotate(1.5deg); }
+  49% { transform: translateY(0) rotate(0); }
+  55% { transform: translateY(9px) scale(.95) rotate(5deg); }
+  61% { transform: translateY(0) scale(1) rotate(0); }
+  72%, 88% { transform: translateY(-5px) rotate(-1.4deg); }
+  100% { transform: translateY(0) rotate(1.4deg); }
 }
-@keyframes passerStrideMirrored {
-  from { transform: scaleX(-1) translateY(0) rotate(-1.4deg); }
-  to { transform: scaleX(-1) translateY(-5px) rotate(1.4deg); }
+@keyframes passerCeremonialWalkMirrored {
+  0%, 10% { transform: scaleX(-1) translateY(0) rotate(-1.5deg); }
+  22%, 36% { transform: scaleX(-1) translateY(-5px) rotate(1.5deg); }
+  49% { transform: scaleX(-1) translateY(0) rotate(0); }
+  55% { transform: scaleX(-1) translateY(9px) scale(.95) rotate(5deg); }
+  61% { transform: scaleX(-1) translateY(0) scale(1) rotate(0); }
+  72%, 88% { transform: scaleX(-1) translateY(-5px) rotate(-1.4deg); }
+  100% { transform: scaleX(-1) translateY(0) rotate(1.4deg); }
+}
+@keyframes passerRibbonFlow {
+  0%, 17% { opacity: 0; transform: translateX(-50%) perspective(320px) rotateX(64deg) scaleY(.2); }
+  34%, 61% { opacity: .85; transform: translateX(-50%) perspective(320px) rotateX(64deg) scaleY(1); }
+  100% { opacity: 0; transform: translateX(-50%) perspective(320px) rotateX(64deg) scaleY(.4); }
+}
+@keyframes passerFloorGlow {
+  0%, 15% { opacity: 0; transform: translateX(-50%) scale(.45); }
+  48%, 64% { opacity: 1; transform: translateX(-50%) scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) scale(.5); }
+}
+@keyframes passerExitSpark {
+  0%, 66% { opacity: 0; transform: translateY(0) scale(.4); }
+  73% { opacity: 1; transform: translateY(-18px) scale(1); }
+  91%, 100% { opacity: 0; transform: translateY(-75px) scale(.65); }
 }
 
 @keyframes walkUpRedCarpet {
