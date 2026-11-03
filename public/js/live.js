@@ -200,6 +200,49 @@
     }).join('');
   }
 
+  // Khách vãng lai đi qua sân miếu: độc lập với nghi lễ/Auto Sim để sân miếu luôn có sức sống.
+  const PASSER_SURNAMES = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Vũ', 'Đặng', 'Bùi', 'Hồ', 'Lâm', 'Trịnh', 'Mai'];
+  const PASSER_GIVEN_NAMES = ['Minh An', 'Gia Hưng', 'Bảo Long', 'Thanh Hà', 'Khánh Duy', 'Anh Thư', 'Quốc Bảo', 'Ngọc Lan', 'Đức Thịnh', 'Hải Nam', 'Tuệ An', 'Phúc Khang'];
+  const PASSER_NAME_POOL = PASSER_SURNAMES.flatMap((surname) => PASSER_GIVEN_NAMES.map((given) => `${surname} ${given}`));
+  let passerNameCursor = 0;
+
+  for (let i = PASSER_NAME_POOL.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [PASSER_NAME_POOL[i], PASSER_NAME_POOL[j]] = [PASSER_NAME_POOL[j], PASSER_NAME_POOL[i]];
+  }
+
+  function nextPasserName() {
+    const cycle = Math.floor(passerNameCursor / PASSER_NAME_POOL.length);
+    const baseName = PASSER_NAME_POOL[passerNameCursor % PASSER_NAME_POOL.length];
+    passerNameCursor += 1;
+    return cycle ? `${baseName} ${cycle + 1}` : baseName;
+  }
+
+  function spawnTemplePasser() {
+    const layer = document.getElementById('carpetWalkerLayer');
+    if (!layer) return;
+
+    const fromRight = Math.random() >= 0.5;
+    const passer = document.createElement('div');
+    passer.className = `temple-passer ${fromRight ? 'temple-passer--right' : 'temple-passer--left'}`;
+    passer.innerHTML = `
+      <div class="temple-passer-name">${escapeHtml(nextPasserName())}</div>
+      <img src="${SPRITE_FRAMES.waiting}" alt="Doanh nhân vãng lai vào miếu" class="devotee-sprite waiting-businessman" />
+    `;
+    layer.appendChild(passer);
+    setTimeout(() => passer.remove(), 14500);
+  }
+
+  function scheduleTemplePasser(firstRun = false) {
+    const delay = firstRun ? 8500 : 60000 + Math.floor(Math.random() * 60001);
+    setTimeout(() => {
+      spawnTemplePasser();
+      scheduleTemplePasser(false);
+    }, delay);
+  }
+
+  scheduleTemplePasser(true);
+
   // Preload sprite nghi thức ôm quyền kính bái Quan Thánh.
   const SPRITE_FRAMES = {
     waiting: '/assets/businessman_waiting.png',

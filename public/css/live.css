@@ -859,6 +859,75 @@ body.obs-mode .stage-wrapper {
   transform-origin: bottom center;
 }
 
+/* Khách vãng lai đi vào, dừng kính lễ, rồi rời sân miếu ở lối đối diện. */
+.temple-passer {
+  position: absolute;
+  top: 1510px;
+  z-index: 13;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.temple-passer .devotee-sprite {
+  width: 118px;
+  height: 185px;
+  object-fit: contain;
+  transform-origin: bottom center;
+  animation: passerStride 520ms ease-in-out infinite alternate;
+}
+.temple-passer--left {
+  left: 185px;
+  animation: passerCrossFromLeft 13.8s cubic-bezier(.25,.72,.25,1) forwards;
+}
+.temple-passer--right {
+  left: 895px;
+  animation: passerCrossFromRight 13.8s cubic-bezier(.25,.72,.25,1) forwards;
+}
+.temple-passer--right .devotee-sprite {
+  animation-name: passerStrideMirrored;
+}
+.temple-passer-name {
+  max-width: 155px;
+  margin-bottom: -3px;
+  padding: 5px 10px;
+  border: 1px solid rgba(255, 224, 126, .72);
+  border-radius: 999px;
+  background: rgba(46, 8, 4, .9);
+  color: #fff0ba;
+  font-size: 13px;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes passerCrossFromLeft {
+  0% { opacity: 0; transform: translate3d(-310px, 270px, 0) scale(.58); }
+  9% { opacity: 1; }
+  39% { opacity: 1; transform: translate3d(80px, 48px, 0) scale(.88); }
+  54% { opacity: 1; transform: translate3d(115px, 24px, 20px) scale(.94); }
+  61% { opacity: 1; transform: translate3d(135px, 42px, 0) scale(.9); }
+  100% { opacity: 0; transform: translate3d(650px, 300px, 0) scale(.56); }
+}
+@keyframes passerCrossFromRight {
+  0% { opacity: 0; transform: translate3d(310px, 270px, 0) scale(.58); }
+  9% { opacity: 1; }
+  39% { opacity: 1; transform: translate3d(-80px, 48px, 0) scale(.88); }
+  54% { opacity: 1; transform: translate3d(-115px, 24px, 20px) scale(.94); }
+  61% { opacity: 1; transform: translate3d(-135px, 42px, 0) scale(.9); }
+  100% { opacity: 0; transform: translate3d(-650px, 300px, 0) scale(.56); }
+}
+@keyframes passerStride {
+  from { transform: translateY(0) rotate(-1.4deg); }
+  to { transform: translateY(-5px) rotate(1.4deg); }
+}
+@keyframes passerStrideMirrored {
+  from { transform: scaleX(-1) translateY(0) rotate(-1.4deg); }
+  to { transform: scaleX(-1) translateY(-5px) rotate(1.4deg); }
+}
+
 @keyframes walkUpRedCarpet {
   0% {
     transform: translate3d(-50%, -100%, 0) scale(1.06);
