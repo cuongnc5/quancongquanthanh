@@ -114,12 +114,12 @@
     }).join('');
   }
 
-  // 5. Dựng 24 thiện tín nền đứng hai bên thảm đỏ (3 hàng x 4 cột mỗi bên)
+  // 5. Dựng 40 thiện tín nền đứng hai bên thảm đỏ (5 hàng x 4 cột mỗi bên)
   const congregationHall = document.getElementById('congregationHall');
   const HALL_SEAT_COORDS = [];
 
   (function buildHallGrid() {
-    const rows = 3;
+    const rows = 5;
     const colsPerSide = 4;
     for (let r = 0; r < rows; r++) {
       const progress = r / (rows - 1); // 0 (xa) -> 1 (gần)
@@ -240,8 +240,8 @@
 
   function sendOneHallDevoteeOut() {
     const seated = Array.from(document.querySelectorAll('.hall-seat:not(.hall-seat--departing)'));
-    // Luôn giữ lại một nhóm thiện tín nền nhỏ, phần còn lại thay ca theo khách mới vào.
-    if (seated.length <= 12) return;
+    // Giữ sảnh luôn đông người, phần vượt 24 thiện tín sẽ thay ca theo khách mới vào.
+    if (seated.length <= 24) return;
 
     const target = seated[Math.floor(Math.random() * seated.length)];
     target.classList.add('hall-seat--departing');
