@@ -103,6 +103,9 @@
         <!-- 8. ĐÈN HOA ĐĂNG / SỚ CẦU NGUYỆN BAY LÊN -->
         <div class="sky-lanterns-layer" id="skyLanternsLayer"></div>
 
+        <!-- 8B. HIỆU ỨNG 2.5D THEO TỪNG LỜI CẦU -->
+        <div class="ritual-effect-layer" id="ritualEffectLayer"></div>
+
         <!-- 9. LỚP CANVAS HIỆU ỨNG KHÓI HƯƠNG, HOA SEN RƠI & SÓNG ÂM -->
         <canvas id="templeCanvas"></canvas>
 
@@ -233,15 +236,15 @@
 
         <div class="dock-grid-2">
           <button class="dock-btn gold" id="btnRpcIncense">🔥 Thắp 3 Nén Hương</button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin tài lộc hanh thông, buôn may bán đắt"><strong>💰 Tài lộc</strong><small>Xin tài lộc hanh thông, buôn may bán đắt</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin làm ăn thuận lợi, khách hàng đông đúc"><strong>🏮 Kinh doanh</strong><small>Xin làm ăn thuận lợi, khách hàng đông đúc</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin gặp quý nhân phù trợ, có người nâng đỡ"><strong>🤝 Quý nhân</strong><small>Xin gặp quý nhân phù trợ, có người nâng đỡ</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin công việc suôn sẻ, thăng quan tiến chức"><strong>📜 Công danh</strong><small>Xin công việc suôn sẻ, thăng quan tiến chức</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin tai qua nạn khỏi, tránh điều xui rủi"><strong>🛡️ Bình an</strong><small>Xin tai qua nạn khỏi, tránh điều xui rủi</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin tránh kẻ tiểu nhân, thị phi và oan khuất"><strong>⚖️ Công lý</strong><small>Xin tránh kẻ tiểu nhân, thị phi và oan khuất</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin gia đình bình an, trên dưới thuận hòa"><strong>🏡 Gia đạo</strong><small>Xin gia đình bình an, trên dưới thuận hòa</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin giữ vững chữ tín, được mọi người kính trọng"><strong>⚔️ Uy tín</strong><small>Xin giữ vững chữ tín, được mọi người kính trọng</small></button>
-          <button class="dock-btn prayer-preset-btn" data-prayer="Xin vượt qua khó khăn, gây dựng cơ nghiệp"><strong>🌟 Sự nghiệp</strong><small>Xin vượt qua khó khăn, gây dựng cơ nghiệp</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="wealth" data-prayer="Tiền vào như nước, tài lộc đầy nhà"><strong>💰 Cầu Tài Lộc</strong><small>Tiền vào như nước, tài lộc đầy nhà</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="orders" data-prayer="Đơn về tới tấp, chốt đơn mỏi tay"><strong>🛍️ Cầu Đắt Hàng</strong><small>Đơn về tới tấp, chốt đơn mỏi tay</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="prosperity" data-prayer="Làm ăn phát đạt, lợi nhuận tăng vù vù"><strong>📈 Cầu Phát Tài</strong><small>Làm ăn phát đạt, lợi nhuận tăng vù vù</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="noble" data-prayer="Quý nhân phù trợ, gặp khó hóa may"><strong>🤝 Cầu Quý Nhân</strong><small>Quý nhân phù trợ, gặp khó hóa may</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="career" data-prayer="Sự nghiệp thăng tiến, công thành danh toại"><strong>💼 Cầu Công Danh</strong><small>Sự nghiệp thăng tiến, công thành danh toại</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="turning" data-prayer="Hết vận xui, đón vận đỏ"><strong>🍀 Cầu Đổi Vận</strong><small>Hết vận xui, đón vận đỏ</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="safety" data-prayer="Tai qua nạn khỏi, gia đạo bình an"><strong>🛡️ Cầu Bình An</strong><small>Tai qua nạn khỏi, gia đạo bình an</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="gossip" data-prayer="Tiểu nhân tránh xa, thị phi tan biến"><strong>⚔️ Cầu Tránh Thị Phi</strong><small>Tiểu nhân tránh xa, thị phi tan biến</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="love" data-prayer="Gặp người chân thành, tình duyên thuận lợi"><strong>❤️ Cầu Duyên Lành</strong><small>Gặp người chân thành, tình duyên thuận lợi</small></button>
         </div>
         <button class="dock-btn gold" id="btnRpcGrandCeremony">
           🐉 Đại Lễ Kim Long Chầu Quan Thánh (Quà Lớn)

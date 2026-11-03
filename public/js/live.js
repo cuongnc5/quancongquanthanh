@@ -502,6 +502,50 @@
   // 7. Xử lý hiệu ứng khi có Nghi Thức mới
   let fortuneTimer = null;
   let grandTimer = null;
+  const PRAYER_EFFECT_BY_WISH = {
+    'tiền vào như nước, tài lộc đầy nhà': 'wealth',
+    'đơn về tới tấp, chốt đơn mỏi tay': 'orders',
+    'làm ăn phát đạt, lợi nhuận tăng vù vù': 'prosperity',
+    'quý nhân phù trợ, gặp khó hóa may': 'noble',
+    'sự nghiệp thăng tiến, công thành danh toại': 'career',
+    'hết vận xui, đón vận đỏ': 'turning',
+    'tai qua nạn khỏi, gia đạo bình an': 'safety',
+    'tiểu nhân tránh xa, thị phi tan biến': 'gossip',
+    'gặp người chân thành, tình duyên thuận lợi': 'love'
+  };
+
+  function spawnPrayerEffect(wish) {
+    const effectKey = PRAYER_EFFECT_BY_WISH[String(wish || '').trim().toLowerCase()];
+    const layer = document.getElementById('ritualEffectLayer');
+    if (!effectKey || !layer) return;
+
+    layer.querySelectorAll('.ritual-2d-effect').forEach((item) => item.remove());
+    const effect = document.createElement('div');
+    effect.className = `ritual-2d-effect effect-${effectKey}`;
+
+    const repeated = (symbol, className, count) => Array.from({ length: count }, (_, index) => {
+      const x = 110 + ((index * 97) % 760);
+      const drift = ((index % 3) - 1) * 62;
+      return `<span class="${className}" style="--x:${x}px;--delay:${index * 90}ms;--drift:${drift}px">${symbol}</span>`;
+    }).join('');
+    const content = {
+      wealth: `${repeated('🪙', 'effect-coin', 14)}${repeated('💰', 'effect-ingot', 5)}<b class="effect-caption">TÀI LỘC HANH THÔNG</b>`,
+      orders: `${repeated('📦', 'effect-box', 7)}<b class="effect-caption">+99 ĐƠN</b>`,
+      prosperity: '<span class="effect-gold-rays"></span><span class="effect-chest">🧰</span><b class="effect-caption">PHÁT TÀI</b>',
+      noble: '<span class="effect-gold-cloud">☁️</span><span class="effect-light-column"></span><span class="effect-noble-icon">🤝</span><b class="effect-caption">QUÝ NHÂN PHÙ TRỢ</b>',
+      career: '<span class="effect-scroll">📜</span><b class="effect-caption">THĂNG TIẾN</b>',
+      turning: '<span class="effect-gray-cloud">☁️</span><span class="effect-red-aura"></span><b class="effect-caption">ĐÓN VẬN ĐỎ</b>',
+      safety: '<span class="effect-shield">🛡️</span><span class="effect-shield-ring"></span><b class="effect-caption">BÌNH AN CÁT TƯỜNG</b>',
+      gossip: '<span class="effect-smoke">☁️</span><span class="effect-blade">⚔️</span><b class="effect-caption">THỊ PHI TAN BIẾN</b>',
+      love: `${repeated('🌸', 'effect-blossom', 12)}${repeated('❤️', 'effect-heart', 4)}<b class="effect-caption">DUYÊN LÀNH</b>`
+    };
+    effect.innerHTML = content[effectKey];
+    layer.appendChild(effect);
+
+    if (effectKey === 'safety') particles.spawnBellWave(540, 820, 2);
+    if (effectKey === 'prosperity' || effectKey === 'wealth') particles.spawnIncenseBurst(540, 830);
+    setTimeout(() => effect.remove(), 4200);
+  }
 
   function triggerRitualVisuals(ev) {
     if (!ev) return;
@@ -538,6 +582,7 @@
       case 'sendPrayer': {
         audio.playIncenseChime();
         spawnSkyLantern(ev.user, ev.wish);
+        spawnPrayerEffect(ev.wish);
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 540, 920, '#ffb74d');
         animateWalkerOnCarpet(ev.user, ev.avatar, `🏮 Cầu phúc (+${ev.merit} CĐ)`, ev.wish);
         break;
