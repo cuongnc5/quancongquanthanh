@@ -235,7 +235,7 @@
       <div class="temple-passer-sparks"><i>✦</i><i>✦</i><i>✦</i></div>
     `;
     layer.appendChild(passer);
-    setTimeout(() => passer.remove(), 14500);
+    setTimeout(() => passer.remove(), 16300);
   }
 
   function sendOneHallDevoteeOut() {
@@ -246,7 +246,7 @@
     const target = seated[Math.floor(Math.random() * seated.length)];
     target.classList.add('hall-seat--departing');
     if (target.classList.contains('hall-seat--right')) target.classList.add('hall-seat--departing-right');
-    setTimeout(() => target.remove(), 3100);
+    setTimeout(() => target.remove(), 2250);
   }
 
   function scheduleTemplePasser(firstRun = false) {
