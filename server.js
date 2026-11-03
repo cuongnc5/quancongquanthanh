@@ -500,7 +500,7 @@ const DEFAULT_STATE = {
 
     autoSim: false,
 
-    autoSimIntervalMs: 9500
+    autoSimIntervalMs: 7200
 
   },
 
@@ -1824,60 +1824,70 @@ function disconnectTikTokLive() {
 // ============================================================================
 
 let autoSimTimer = null;
+let simSequence = 0;
+let simNameCursor = 0;
 
-const SIM_DEVOTEES = [
-
-  { user: 'Ngọc Anh Nguyễn', uniqueId: 'ngocanh.98', wish: 'Cầu cho cha mẹ mạnh khỏe, gia đình bình an, trên dưới thuận hòa' },
-
-  { user: 'Trần Minh Quân', uniqueId: 'minhquan_bds', wish: 'Cầu công việc thuận lợi, làm ăn có lộc, khách hàng tin tưởng' },
-
-  { user: 'Diệu Thảo Tâm An', uniqueId: 'tam_an_99', wish: 'Cầu cho cả nhà bình an, công việc suôn sẻ, gặp nhiều may mắn' },
-
-  { user: 'Lê Hoàng Nam', uniqueId: 'hoangnam.dev', wish: 'Cầu học hành tiến bộ, thi cử thuận lợi, tương lai tươi sáng' },
-
-  { user: 'Phạm Thanh Hà', uniqueId: 'thanhha.lotus', wish: 'Cầu gia đình êm ấm, con cái chăm ngoan, mọi chuyện thuận hòa' },
-
-  { user: 'Vũ Đức Thịnh', uniqueId: 'ducthinh88', wish: 'Xin một quẻ đầu năm để chiêm nghiệm việc làm ăn và công việc' },
-
-  { user: 'Hoàng Gia Phát', uniqueId: 'hoanggia.phat', wish: 'Cầu buôn may bán đắt, gặp đối tác tốt, làm ăn giữ chữ tín' },
-
-  { user: 'Lâm Bảo Châu', uniqueId: 'lam.baochau', wish: 'Cầu cửa hàng đông khách, hàng bán chạy, khách mua vui vẻ' },
-
-  { user: 'Trịnh Quốc Hưng', uniqueId: 'quochung.biz', wish: 'Cầu ký kết thuận lợi, hợp tác suôn sẻ, làm ăn lâu dài' },
-
-  { user: 'Mai Anh Thư', uniqueId: 'maianhthu.store', wish: 'Cầu tiền bạc ổn định, công nợ thuận lợi, kinh doanh ngày càng phát triển' },
-
-  { user: 'Phan Minh Long', uniqueId: 'minhlong.ceo', wish: 'Cầu khai trương hồng phát, khách hàng tin tưởng, anh em đồng lòng' },
-
-  { user: 'Nguyễn Thanh Tín', uniqueId: 'thanhtin.trade', wish: 'Cầu hàng hóa thuận lợi, mua may bán đắt, đôi bên cùng có lợi' }
-
+const SIM_SURNAMES = ['Nguyễn', 'Trần', 'Lê', 'Phạm', 'Hoàng', 'Huỳnh', 'Phan', 'Vũ', 'Võ', 'Đặng', 'Bùi', 'Đỗ', 'Hồ', 'Ngô', 'Dương', 'Lý', 'Đinh', 'Mai', 'Trịnh', 'Lâm'];
+const SIM_MIDDLE_NAMES = ['Minh', 'Thanh', 'Gia', 'Quốc', 'Bảo', 'Anh', 'Đức', 'Khánh', 'Hải', 'Thiên', 'Nhật', 'Thành', 'Kim', 'Tuệ', 'Hoài', 'Phúc'];
+const SIM_GIVEN_NAMES = ['An', 'Bình', 'Châu', 'Duy', 'Giang', 'Hà', 'Hưng', 'Khang', 'Lan', 'Long', 'Nam', 'Ngọc', 'Phát', 'Quân', 'Sơn', 'Thảo', 'Thịnh', 'Trang', 'Tú', 'Vy'];
+const SIM_WISHES = [
+  'Kính nguyện giao thương thuận lợi, đối tác đồng lòng, hợp đồng hanh thông',
+  'Kính nguyện cửa hàng đông khách, khách mua vui vẻ, người bán giữ trọn chữ tín',
+  'Kính nguyện dòng tiền ổn định, công nợ thuận hòa, việc làm ăn bền vững',
+  'Kính nguyện chọn đúng cộng sự, cùng nhau phát triển lâu dài và chính trực',
+  'Kính nguyện khai trương hồng phát, hàng hóa lưu thông, khách hàng tin tưởng',
+  'Kính nguyện gia đạo bình an, sức khỏe vẹn toàn, kinh doanh thuận buồm xuôi gió',
+  'Kính nguyện sáng suốt khi quyết định, giữ nghĩa tín trong mọi cuộc giao thương',
+  'Kính nguyện tài lộc hanh thông, nhân viên đồng lòng, công việc phát triển'
 ];
+
+// Xáo trước toàn bộ tổ hợp tên: tên mỗi lượt là ngẫu nhiên nhưng không lặp lại.
+const SIM_NAME_POOL = [];
+for (const surname of SIM_SURNAMES) {
+  for (const middle of SIM_MIDDLE_NAMES) {
+    for (const given of SIM_GIVEN_NAMES) SIM_NAME_POOL.push(`${surname} ${middle} ${given}`);
+  }
+}
+for (let i = SIM_NAME_POOL.length - 1; i > 0; i -= 1) {
+  const j = Math.floor(Math.random() * (i + 1));
+  [SIM_NAME_POOL[i], SIM_NAME_POOL[j]] = [SIM_NAME_POOL[j], SIM_NAME_POOL[i]];
+}
+
+function nextSimDevotee() {
+  const cycle = Math.floor(simNameCursor / SIM_NAME_POOL.length);
+  const baseName = SIM_NAME_POOL[simNameCursor % SIM_NAME_POOL.length];
+  simNameCursor += 1;
+  simSequence += 1;
+  const user = cycle === 0 ? baseName : `${baseName} ${cycle + 1}`;
+  const uniqueId = `sim_${String(simSequence).padStart(5, '0')}_${user.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '_')}`;
+  return {
+    user,
+    uniqueId,
+    wish: SIM_WISHES[Math.floor(Math.random() * SIM_WISHES.length)]
+  };
+}
 
 function runSingleSimulationStep() {
 
-  const pick = SIM_DEVOTEES[Math.floor(Math.random() * SIM_DEVOTEES.length)];
-
+  const pick = nextSimDevotee();
+  // Chỉ đọc một trong bốn lượt để không làm nghẽn hàng đợi ZeroTTS.
+  const readTts = simSequence % 4 === 1;
   const roll = Math.random();
 
-  if (roll < 0.30) {
+  if (roll < 0.52) {
 
-    Rituals.burnIncense({ user: pick.user, uniqueId: pick.uniqueId, count: 3, wish: pick.wish });
+    Rituals.burnIncense({ user: pick.user, uniqueId: pick.uniqueId, count: Math.random() < 0.25 ? 5 : 3, wish: pick.wish, readTts });
 
-  } else if (roll < 0.55) {
+  } else if (roll < 0.78) {
 
-    Rituals.sendPrayer({ user: pick.user, uniqueId: pick.uniqueId, wish: pick.wish });
-
-  } else if (roll < 0.75) {
-
-    Rituals.drawFortune({ user: pick.user, uniqueId: pick.uniqueId, topic: pick.wish });
-
-  } else if (roll < 0.90) {
-
-    Rituals.offerGift({ user: pick.user, uniqueId: pick.uniqueId, giftType: 'lotus', coins: 15, giftName: 'Hoa Sen Vàng Tinh Khiết' });
+    Rituals.sendPrayer({ user: pick.user, uniqueId: pick.uniqueId, wish: pick.wish, readTts });
 
   } else {
 
-    Rituals.ringBell({ user: pick.user, uniqueId: pick.uniqueId, count: 1, wish: pick.wish, readTts: true });
+    const offering = Math.random() < 0.55
+      ? { giftType: 'lotus', coins: 15, giftName: 'Đài Hoa Sen Vàng' }
+      : { giftType: 'fruit', coins: 30, giftName: 'Mâm Ngũ Quả Cát Tường' };
+    Rituals.offerGift({ user: pick.user, uniqueId: pick.uniqueId, wish: pick.wish, readTts, ...offering });
 
   }
 
@@ -1889,7 +1899,7 @@ function configureAutoSim(enabled) {
 
   if (autoSimTimer) {
 
-    clearInterval(autoSimTimer);
+    clearTimeout(autoSimTimer);
 
     autoSimTimer = null;
 
@@ -1899,7 +1909,16 @@ function configureAutoSim(enabled) {
 
     runSingleSimulationStep();
 
-    autoSimTimer = setInterval(runSingleSimulationStep, state.settings.autoSimIntervalMs || 9500);
+    const baseInterval = Math.max(6800, Math.min(7600, Number(state.settings.autoSimIntervalMs) || 7200));
+    const scheduleNext = () => {
+      const jitter = Math.floor(Math.random() * 801) - 400;
+      autoSimTimer = setTimeout(() => {
+        if (!state.settings.autoSim) return;
+        runSingleSimulationStep();
+        scheduleNext();
+      }, baseInterval + jitter);
+    };
+    scheduleNext();
 
   }
 
@@ -2275,6 +2294,9 @@ server.listen(PORT, () => {
   console.log(`🔌 JSON-RPC 2.0 Endpoint   : http://localhost:\({PORT}/rpc (ws\://localhost:\){PORT}/ws)`);
 
   console.log(`============================================================`);
+
+  // Tiếp tục giả lập sau khi khởi động lại nếu người quản trị đã bật chế độ này.
+  if (state.settings.autoSim) configureAutoSim(true);
 
   // Tự động kết nối tới @zenfacts_vn ngay khi khởi động server
 
