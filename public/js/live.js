@@ -775,7 +775,7 @@
     callRpc('temple.offerGift', {
       user,
       giftType: 'lotus',
-      coins: 20,
+      coins: 3,
       giftName: 'Đài Hoa Sen Vàng',
       wish
     });
