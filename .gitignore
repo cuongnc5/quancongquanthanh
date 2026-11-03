@@ -5,5 +5,7 @@ dist/
 embedded-assets.js
 .DS_Store
 *.log
+__pycache__/
+*.py[cod]
 *.m4a
 public/assets/bg_chant.m4a

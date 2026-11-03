@@ -1,6 +1,6 @@
 /**
  * TempleAudioEngine
- * - Nhạc nền: Phát trực tiếp file "Nam Mô A Di Đà Phật.m4a" (/assets/bg_chant.m4a) lặp vô tận êm dịu,
+ * - Nhạc nền: Phát trực tiếp file nền nghi thức (/assets/bg_chant.m4a) lặp vô tận êm dịu,
  *   tự động hạ nhỏ âm lượng (ducking) khi có giọng đọc lời khấn để không bị đè tiếng hay rè/xước.
  * - Pháp khí: Tổng hợp tiếng Mõ gỗ, Đại Hồng Chung, Ống xăm nhẹ nhàng, không vượt ngưỡng 0dBFS.
  * - Giọng đọc: Hàng đợi ZeroTTS phát tuần tự mượt mà.
@@ -14,7 +14,7 @@ class TempleAudioEngine {
     this.ttsEnabled = true;
     this.ttsVoice = 'maichi';
 
-    // Nhạc nền "Nam Mô A Di Đà Phật.m4a" — mặc định 65%, cho phép chỉnh trực tiếp 0% - 100%
+    // Nhạc nền nghi thức — mặc định 65%, cho phép chỉnh trực tiếp 0% - 100%
     const savedMusicVol = parseFloat(localStorage.getItem('temple_music_vol'));
     const savedTtsVol = parseFloat(localStorage.getItem('temple_tts_vol'));
     this.bgBaseVolume = Number.isFinite(savedMusicVol) ? Math.max(0, Math.min(1, savedMusicVol)) : 0.65;
@@ -51,7 +51,7 @@ class TempleAudioEngine {
   }
 
   // --------------------------------------------------------------------------
-  // 1. NHẠC NỀN "NAM MÔ A DI ĐÀ PHẬT.M4A" (CÓ AUTO-DUCKING KHI ĐỌC LỜI KHẤN)
+  // 1. NHẠC NỀN NGHI THỨC (CÓ AUTO-DUCKING KHI ĐỌC LỜI KHẤN)
   // --------------------------------------------------------------------------
   getDuckedVolume() {
     return Math.max(0.08, +(this.bgBaseVolume * 0.35).toFixed(2));

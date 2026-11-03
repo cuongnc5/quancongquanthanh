@@ -1,7 +1,7 @@
 /**
- * Live 9:16 Client Controller — Chánh Điện Đức Phật A Di Đà & Đạo Tràng Phật Tử Quỳ Lễ
+ * Live 9:16 Client Controller — Miếu Quan Công & Thiện Tín Kính Lễ
  * - Hiển thị 6 Đệm Quỳ VIP (Top 6 Bảng Vàng Công Đức)
- * - Hiển thị 40 Phật Tử mặc áo lam quỳ hai bên thảm đỏ + thẻ tên người xem
+ * - Hiển thị 40 thiện tín quỳ hai bên thảm đỏ + thẻ tên người xem
  * - Hiệu ứng người xem bước dọc thảm đỏ lên trước Lư Hương Đồng dâng hương
  * - Giọng đọc ZeroTTS (Mai Chi) + Pháp khí Web Audio
  */
@@ -33,7 +33,7 @@
     audio.ensureContext();
     const btnUnlock = document.getElementById('btnUnlockAudio');
     if (btnUnlock) {
-      btnUnlock.textContent = '✅ Âm Thanh Chùa Đã Sẵn Sàng';
+      btnUnlock.textContent = '✅ Âm Thanh Miếu Đã Sẵn Sàng';
       btnUnlock.classList.remove('gold');
       btnUnlock.classList.add('active-toggle');
     }
@@ -88,16 +88,23 @@
     { x: 940, y: 1188, rank: 6 }
   ];
 
+  let lastVipLeaderboardJson = '';
+
   function renderVipCushions(leaderboard = []) {
     const layer = document.getElementById('vipCushionsLayer');
     if (!layer) return;
 
+    const vipView = leaderboard.slice(0, VIP_CUSHION_COORDS.length);
+    const sig = JSON.stringify(vipView.map((d) => `${d.name}:${d.merit}:${d.avatar || ''}`));
+    if (sig === lastVipLeaderboardJson && layer.children.length > 0) return;
+    lastVipLeaderboardJson = sig;
+
     layer.innerHTML = VIP_CUSHION_COORDS.map((slot, idx) => {
-      const dev = leaderboard[idx];
+      const dev = vipView[idx];
       if (!dev) return '';
       return `
-        <div class="vip-devotee-slot" style="left: ${slot.x}px; top: ${slot.y}px; z-index: ${12 + idx};">
-          <img src="/assets/devotee.png" alt="VIP Devotee" class="devotee-sprite" />
+        <div class="vip-devotee-slot ${slot.x > 540 ? 'vip-devotee-slot--right' : ''}" style="left: ${slot.x}px; top: ${slot.y}px; z-index: ${12 + idx};">
+          <img src="/assets/businessman_waiting.png" alt="Doanh nhân đứng nghiêm trang VIP" class="devotee-sprite waiting-businessman" />
           <div class="vip-rank-pill">
             <span class="vip-rank-num">${slot.rank}</span>
             <span class="vip-rank-name">${escapeHtml(shortenName(dev.name, 12))}</span>
@@ -107,7 +114,7 @@
     }).join('');
   }
 
-  // 5. Dựng Đạo Tràng 40 Phật Tử Quỳ Lễ Hai Bên Thảm Đỏ (5 Hàng x 4 Cột mỗi bên)
+  // 5. Dựng 40 thiện tín đứng hai bên thảm đỏ (5 hàng x 4 cột mỗi bên)
   const congregationHall = document.getElementById('congregationHall');
   const HALL_SEAT_COORDS = [];
 
@@ -177,14 +184,14 @@
 
       return `
         <div
-          class="hall-seat"
+          class="hall-seat ${seat.side === 'R' ? 'hall-seat--right' : ''}"
           data-seat-idx="${idx}"
           style="left: ${seat.x}px; top: ${seat.y}px; z-index: ${20 + seat.row * 2}; transform: translate(-50%, -100%) scale(${seat.scale});"
         >
           <img
-            src="/assets/devotee.png"
-            alt="Phật tử"
-            class="devotee-sprite"
+            src="/assets/businessman_waiting.png"
+            alt="Doanh nhân đứng nghiêm trang"
+            class="devotee-sprite waiting-businessman"
             style="animation-delay: ${((idx * 0.27) % 3.5).toFixed(2)}s;"
           />
           ${badgeHtml}
@@ -193,46 +200,42 @@
     }).join('');
   }
 
-  // Preload toàn bộ 8 frame nhân vật vào bộ nhớ để chuyển frame mượt 0ms
+  // Preload sprite nghi thức ôm quyền kính bái Quan Thánh.
   const SPRITE_FRAMES = {
-    walk1: '/assets/devotee_walk.png',
-    walk2: '/assets/devotee_walk_2.png',
-    kneelDown: '/assets/devotee_kneel_down.png',
-    kneel: '/assets/devotee.png',
-    forehead: '/assets/devotee_bow.png',
-    bowMid: '/assets/devotee_bow_mid.png',
-    prostrate: '/assets/devotee_prostrate.png',
-    prostrateDeep: '/assets/devotee_prostrate_deep.png'
+    waiting: '/assets/businessman_waiting.png',
+    incense: '/assets/businessman_incense.png',
+    vipIncense: '/assets/vip_businessman_incense.png'
   };
   Object.values(SPRITE_FRAMES).forEach((url) => {
     const img = new Image();
     img.src = url;
   });
 
-  function pulseHallBowing() {
+  function pulseHallSalute() {
     if (!congregationHall) return;
-    const seats = congregationHall.querySelectorAll('.hall-seat');
+    const seats = document.querySelectorAll('.hall-seat, .vip-devotee-slot');
     seats.forEach((el, i) => {
       if (i % 4 !== 0) return;
       const img = el.querySelector('.devotee-sprite');
       if (!img) return;
-      const delay = (i % 4) * 80;
-      setTimeout(() => { img.src = SPRITE_FRAMES.forehead; }, delay);
-      setTimeout(() => { img.src = SPRITE_FRAMES.bowMid; }, delay + 140);
-      setTimeout(() => { img.src = SPRITE_FRAMES.prostrateDeep; }, delay + 300);
-      setTimeout(() => { img.src = SPRITE_FRAMES.bowMid; }, delay + 620);
-      setTimeout(() => { img.src = SPRITE_FRAMES.kneel; }, delay + 780);
+      const delay = Math.floor(i / 4) * 55;
+      setTimeout(() => {
+        img.classList.remove('quan-thanh-salute');
+        void img.offsetWidth;
+        img.classList.add('quan-thanh-salute');
+      }, delay);
+      setTimeout(() => img.classList.remove('quan-thanh-salute'), delay + 780);
     });
   }
 
-  let prostrationTimers = [];
-  function clearProstrationTimers() {
-    while (prostrationTimers.length > 0) {
-      clearTimeout(prostrationTimers.pop());
+  let ritualTimers = [];
+  function clearRitualTimers() {
+    while (ritualTimers.length > 0) {
+      clearTimeout(ritualTimers.pop());
     }
   }
 
-  // Chuyển đổi tức thời giữa 8 khung hình đã giải mã sẵn trên GPU (KHÔNG BAO GIỜ BỊ MẤT HÌNH)
+  // Chuyển đổi tức thời sprite nghi thức đã giải mã sẵn trên GPU.
   function setCentralPose(poseKey) {
     const stack = document.getElementById('centralSpriteStack');
     if (!stack) return;
@@ -242,71 +245,84 @@
     });
   }
 
+  function setCentralRitualSprite(isVip = false) {
+    const frame = document.querySelector('#centralSpriteStack .pose-frame');
+    const centralEl = document.getElementById('centralWorshipper');
+    if (frame) {
+      frame.src = isVip ? SPRITE_FRAMES.vipIncense : SPRITE_FRAMES.incense;
+      frame.alt = isVip ? 'VIP TikToker dâng hương kính bái Quan Thánh' : 'Doanh nhân dâng hương kính bái Quan Thánh';
+    }
+    centralEl?.classList.toggle('vip-ritual', isVip);
+  }
+
   function schedulePose(ms, poseKey) {
-    prostrationTimers.push(
+    ritualTimers.push(
       setTimeout(() => {
         setCentralPose(poseKey);
       }, ms)
     );
   }
 
-  // Chuỗi 8 khung hình Đảnh lễ Tam Bái mượt mà (Hạ gối -> Chắp tay ngực -> Đưa lên trán -> Nghiêng 45° -> Chống tay -> Lạy sát đất -> Ngẩng lên)
-  function playThreeBowsSequence(startDelayMs = 0) {
-    schedulePose(startDelayMs, 'kneelDown');
-    schedulePose(startDelayMs + 160, 'kneel');
-
-    const bowOffsets = [startDelayMs + 320, startDelayMs + 1820, startDelayMs + 3320];
-    bowOffsets.forEach((t0) => {
-      schedulePose(t0, 'forehead');            // 1. Chắp tay đưa lên trán
-      schedulePose(t0 + 170, 'bowMid');        // 2. Cúi gập lưng 45°
-      schedulePose(t0 + 330, 'prostrate');     // 3. Vươn hai tay chống xuống đệm
-      schedulePose(t0 + 490, 'prostrateDeep'); // 4. Lạy sát đất (Ngũ thể đầu địa)
-      schedulePose(t0 + 860, 'prostrate');     // 5. Bắt đầu nâng đầu lên
-      schedulePose(t0 + 1020, 'bowMid');       // 6. Nâng lưng lên góc 45°
-      schedulePose(t0 + 1180, 'kneel');        // 7. Ngồi quỳ thẳng lưng
+  // Ba lần ôm quyền cúi chào trang trọng trước Quan Thánh, không dùng động tác quỳ lạy.
+  function playQuanThanhSaluteSequence(startDelayMs = 0) {
+    const frame = document.querySelector('#centralSpriteStack .pose-frame');
+    schedulePose(startDelayMs, 'salute');
+    [0, 900, 1800].forEach((offset) => {
+      ritualTimers.push(setTimeout(() => {
+        if (!frame) return;
+        frame.classList.remove('quan-thanh-salute');
+        void frame.offsetWidth;
+        frame.classList.add('quan-thanh-salute');
+      }, startDelayMs + offset));
+      ritualTimers.push(setTimeout(() => frame?.classList.remove('quan-thanh-salute'), startDelayMs + offset + 780));
     });
-
-    schedulePose(startDelayMs + 4800, 'forehead');
-    schedulePose(startDelayMs + 5350, 'kneel');
   }
 
-  // Hiệu ứng thí chủ ĐỨNG ĐI BỘ từng bước dọc thảm đỏ rồi Hạ gối Quỳ Đảnh Lễ (trên cùng 1 nhân vật, không bao giờ mất hình)
-  function animateWalkerOnCarpet(user, avatar, actionLabel, wish) {
+  // Hiệu ứng thiện tín tiến dọc thảm đỏ rồi ôm quyền kính bái Quan Thánh.
+  function animateWalkerOnCarpet(user, avatar, actionLabel, wish, isVip = false) {
     const centralEl = document.getElementById('centralWorshipper');
     if (!centralEl) return;
 
-    clearProstrationTimers();
+    clearRitualTimers();
     updateCentralWorshipper(user, avatar, actionLabel, wish, false);
+    setCentralRitualSprite(isVip);
 
     // Khởi động bước đi từ cuối thảm đỏ lên chính điện
     centralEl.classList.remove('walking-up');
     void centralEl.offsetWidth;
     centralEl.classList.add('walking-up');
 
-    setCentralPose('walk1');
-    for (let step = 1; step <= 10; step++) {
-      schedulePose(step * 185, step % 2 === 0 ? 'walk1' : 'walk2');
-    }
+    setCentralPose('salute');
 
-    // Khi bước tới trước Lư Hương (2.05s): dừng bước, hạ gối quỳ xuống đệm và bắt đầu Đảnh lễ 3 lạy
-    prostrationTimers.push(
+    // Khi bước tới trước Lư Hương: dừng lại và thực hiện nghi thức ôm quyền kính bái Quan Thánh.
+    ritualTimers.push(
       setTimeout(() => {
         centralEl.classList.remove('walking-up');
+        particles.spawnBellWave(540, 820, 1);
       }, 2100)
     );
-    playThreeBowsSequence(2050);
+    playQuanThanhSaluteSequence(2050);
+    ritualTimers.push(
+      setTimeout(() => {
+        // Hoàn tất ba nhịp kính bái rồi mới cắm hương vào lư đồng.
+        particles.spawnIncenseBurst(540, 895);
+        particles.spawnBellWave(540, 820, 2);
+      }, 4750)
+    );
   }
 
-  function updateCentralWorshipper(user, avatar, actionLabel, wish, doThreeBows = true) {
+  function updateCentralWorshipper(user, avatar, actionLabel, wish, doQuanThanhSalute = true) {
     const nameEl = document.getElementById('centralName');
     const actEl = document.getElementById('centralAction');
     const wishEl = document.getElementById('centralWishBubble');
     const avatarEl = document.getElementById('centralAvatar');
     const beam = document.getElementById('sacredLightBeam');
 
-    if (nameEl) nameEl.textContent = user || 'Thí Chủ Hữu Duyên';
-    if (actEl) actEl.textContent = actionLabel || '✨ Dâng hương cầu an';
-    if (wishEl) wishEl.textContent = `“${wish || 'Nam Mô A Di Đà Phật, cầu bình an cát tường'}”`;
+    setCentralRitualSprite(false);
+
+    if (nameEl) nameEl.textContent = user || 'Thiện Tín Hữu Duyên';
+    if (actEl) actEl.textContent = actionLabel || '✨ Dâng hương kính nguyện';
+    if (wishEl) wishEl.textContent = `“${wish || 'Kính bái Quan Thánh Đế Quân, nguyện giữ nghĩa tín, gia đạo bình an'}”`;
 
     if (avatarEl) {
       if (avatar) {
@@ -316,33 +332,28 @@
       }
     }
 
-    if (doThreeBows) {
-      clearProstrationTimers();
+    if (doQuanThanhSalute) {
+      clearRitualTimers();
       const centralEl = document.getElementById('centralWorshipper');
       if (centralEl) centralEl.classList.remove('walking-up');
-      playThreeBowsSequence(0);
+      playQuanThanhSaluteSequence(0);
     }
     if (beam) {
       beam.classList.add('intense');
       setTimeout(() => beam.classList.remove('intense'), 4500);
     }
 
-    const haloSys = document.getElementById('buddhaHaloSystem');
-    const lotusHand = document.getElementById('lotusHandHalo');
+    const haloSys = document.getElementById('heroAuraSystem');
     if (haloSys) {
       haloSys.classList.add('flare');
       setTimeout(() => haloSys.classList.remove('flare'), 3600);
-    }
-    if (lotusHand) {
-      lotusHand.classList.add('flare');
-      setTimeout(() => lotusHand.classList.remove('flare'), 3600);
     }
     particles.spawnBellWave(540, 260, 2);
 
     // Cập nhật dòng thông báo dưới thanh HUD
     const hudName = document.getElementById('devoteeNameLine');
     const hudAct = document.getElementById('devoteeActionTag');
-    if (hudName) hudName.textContent = user || 'Thí Chủ';
+    if (hudName) hudName.textContent = user || 'Thiện Tín';
     if (hudAct) hudAct.textContent = actionLabel || 'Dâng hương';
   }
 
@@ -370,7 +381,7 @@
         topDev.name,
         topDev.avatar,
         `✨ Công đức: ${Number(topDev.merit).toLocaleString('vi-VN')} CĐ`,
-        topDev.lastWish || 'Nam Mô A Di Đà Phật, cầu bình an cát tường',
+        topDev.lastWish || 'Kính bái Quan Thánh Đế Quân, nguyện giữ nghĩa tín, gia đạo bình an',
         false
       );
     }
@@ -404,8 +415,8 @@
     } else {
       liveDot.classList.remove('connected');
       liveText.textContent = st.settings?.autoSim
-        ? 'CHÙA LINH ỨNG • TỰ ĐỘNG GIẢ LẬP ĐÔNG NGƯỜI'
-        : 'CHÙA LINH ỨNG • ĐỨC PHẬT A DI ĐÀ';
+        ? 'MIẾU QUAN CÔNG • TỰ ĐỘNG GIẢ LẬP ĐÔNG NGƯỜI'
+        : 'MIẾU QUAN CÔNG • QUAN THÁNH ĐẾ QUÂN';
     }
 
     const btnAutoSim = document.getElementById('btnToggleAutoSim');
@@ -453,14 +464,14 @@
       case 'ringBell':
         return `🔔 <strong>${escapeHtml(ev.user)}</strong> thỉnh Đại Hồng Chung (+${ev.merit} CĐ)`;
       case 'sendPrayer':
-        return `🏮 <strong>${escapeHtml(ev.user)}</strong> cầu phúc: “${escapeHtml(ev.wish)}”`;
+        return `🏮 <strong>${escapeHtml(ev.user)}</strong> kính nguyện: “${escapeHtml(ev.wish)}”`;
       case 'offerGift':
       case 'grandCeremony':
         return `🪷 <strong>${escapeHtml(ev.user)}</strong> dâng <em>${escapeHtml(ev.giftName)}</em> (+${ev.merit} CĐ)`;
       case 'drawFortune':
         return `🎋 <strong>${escapeHtml(ev.user)}</strong> gieo được Quẻ số ${ev.fortune?.number} (${ev.fortune?.rank})`;
       default:
-        return `✨ <strong>${escapeHtml(ev.user || 'Thí chủ')}</strong> tương tác`;
+        return `✨ <strong>${escapeHtml(ev.user || 'Thiện tín')}</strong> tương tác`;
     }
   }
 
@@ -486,14 +497,14 @@
 
       case 'strikeWoodenFish': {
         audio.playWoodenFish();
-        pulseHallBowing();
+        pulseHallSalute();
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 890, 935, '#ffd54f');
         break;
       }
 
       case 'ringBell': {
         audio.playTempleBell(1.0);
-        pulseHallBowing();
+        pulseHallSalute();
         particles.spawnBellWave(540, 510, 4);
         particles.spawnFloatingMerit(`+${ev.merit} Công Đức`, 190, 935, '#fff3b0');
         updateCentralWorshipper(ev.user, ev.avatar, `🔔 Thỉnh Đại Hồng Chung (+${ev.merit} CĐ)`, ev.wish);
@@ -521,9 +532,9 @@
         audio.playTempleBell(1.2);
         setTimeout(() => audio.playTempleBell(1.1), 900);
         particles.spawnGrandCeremonyRain();
-        pulseHallBowing();
+        pulseHallSalute();
         showGrandCeremonyBanner(ev.user, ev.giftName, ev.merit);
-        animateWalkerOnCarpet(ev.user, ev.avatar, `🐉 ${ev.giftName} (+${ev.merit} CĐ)`, ev.wish);
+        animateWalkerOnCarpet(ev.user, ev.avatar, `🐉 ${ev.giftName} (+${ev.merit} CĐ)`, ev.wish, true);
         break;
       }
 
@@ -533,7 +544,7 @@
           ev.user,
           ev.avatar,
           `🎋 Đang xin xăm...`,
-          `Thí chủ ${ev.user} đang thành tâm xin quẻ...`,
+          `Thiện tín ${ev.user} đang thành tâm thỉnh quẻ...`,
           false
         );
         // Chỉ hiển thị tờ Quẻ Xăm đúng thời điểm giọng đọc bắt đầu vang lên!
@@ -584,7 +595,7 @@
     const modal = document.getElementById('fortuneModal');
     document.getElementById('fortuneRankBadge').textContent = fortune.rank.toUpperCase();
     document.getElementById('fortuneTitle').textContent = `Quẻ Số ${fortune.number} — ${fortune.title}`;
-    document.getElementById('fortuneDevotee').textContent = `Thí chủ cầu quẻ: ${user}`;
+    document.getElementById('fortuneDevotee').textContent = `Thiện tín thỉnh quẻ: ${user}`;
     document.getElementById('fortunePoem').textContent = fortune.poem;
     document.getElementById('fortuneMeaning').textContent = `Lời bàn: ${fortune.meaning}`;
 
@@ -602,7 +613,7 @@
   function showGrandCeremonyBanner(user, giftName, merit) {
     const banner = document.getElementById('grandCeremonyBanner');
     document.getElementById('grandTitle').textContent = `🐉 ${giftName.toUpperCase()} 🐉`;
-    document.getElementById('grandSub').textContent = `Đại Thí Chủ ${user} • Công Đức Vô Lượng (+${merit} CĐ)`;
+    document.getElementById('grandSub').textContent = `Thiện Tín ${user} • Lòng Thành Vẹn Toàn (+${merit} điểm)`;
     banner.classList.add('visible');
     clearTimeout(grandTimer);
     grandTimer = setTimeout(() => {
@@ -628,7 +639,7 @@
           if (msg.params?.event) triggerRitualVisuals(msg.params.event);
         } else if (msg.method === 'tts.play') {
           if (msg.params?.url) {
-            audio.enqueueTts(msg.params.text || 'Nam mô A Di Đà Phật', {
+            audio.enqueueTts(msg.params.text || 'Kính bái Quan Thánh Đế Quân', {
               voice: msg.params.voice || 'maichi',
               url: msg.params.url
             });
@@ -670,7 +681,7 @@
     const user = document.getElementById('inputDevoteeName')?.value.trim() || 'Quỳnh_Finn';
     const wish =
       document.getElementById('inputDevoteeWish')?.value.trim() ||
-      'Cầu cho gia đình bình an, tài lộc hanh thông';
+      'Kính nguyện buôn bán chính trực, gặp đối tác thiện chí, giữ chữ tín và hanh thông tài lộc';
     return { user, wish };
   }
 
@@ -758,7 +769,7 @@
     callRpc('temple.grandCeremony', {
       user,
       coins: 299,
-      giftName: 'Đại Lễ Kim Long Chầu Phật',
+      giftName: 'Đại Lễ Kim Long Chầu Quan Thánh',
       wish
     });
   });

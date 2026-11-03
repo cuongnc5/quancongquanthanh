@@ -76,7 +76,7 @@ body.obs-mode .stage-wrapper {
   contain: strict;
 }
 
-/* 1. HÌNH NỀN CHÁNH ĐIỆN ĐỨC PHẬT A DI ĐÀ SẮC NÉT TUYỆT ĐỐI */
+/* 1. HÌNH NỀN MIẾU QUAN CÔNG */
 .sanctuary-bg-img {
   position: absolute;
   inset: 0;
@@ -88,17 +88,17 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
 }
 
-/* 1B. HỆ THỐNG HÀO QUANG ĐỨC PHẬT A DI ĐÀ — TỐI ƯU HÓA CPU (KHÔNG DÙNG FILTER:BLUR) */
-.buddha-halo-system {
+/* 1B. HÀO QUANG QUAN THÁNH — TỐI ƯU HÓA CPU (KHÔNG DÙNG FILTER:BLUR) */
+.hero-aura-system {
   position: absolute;
   left: 540px;
-  top: 260px;
+  top: 400px;
   width: 720px;
   height: 720px;
   transform: translate3d(-50%, -50%, 0);
   z-index: 4;
   pointer-events: none;
-  /* Khoét tâm trong suốt tại vị trí khuôn mặt Đức Phật để mặt Ngài sắc nét 100% */
+  /* Khoét tâm trong suốt tại vị trí khuôn mặt Quan Thánh để ảnh nền luôn sắc nét */
   mask-image: radial-gradient(
     circle at 50% 50%,
     transparent 0%,
@@ -121,7 +121,7 @@ body.obs-mode .stage-wrapper {
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.buddha-halo-system.flare {
+.hero-aura-system.flare {
   opacity: 1;
   transform: translate3d(-50%, -50%, 0) scale(1.06);
 }
@@ -189,7 +189,7 @@ body.obs-mode .stage-wrapper {
   to { transform: rotate(0deg); }
 }
 
-/* Hào quang Đài Sen Vàng trên tay Đức Phật A Di Đà (x=540, y=502) */
+/* Hào quang bàn thờ (legacy, không còn gắn vào giao diện) */
 .lotus-hand-halo {
   position: absolute;
   left: 540px;
@@ -379,7 +379,7 @@ body.obs-mode .stage-wrapper {
 }
 
 /* ==========================================================================
-   4. NHÂN VẬT PHẬT TỬ ÁO LAM QUỲ LỄ (SHADOW ĐÃ BAKE SẴN VÀO PNG, 0% CPU FILTER)
+   4. NHÂN VẬT DOANH NHÂN THIỆN TÍN QUỲ LỄ (SHADOW ĐÃ BAKE SẴN VÀO PNG, 0% CPU FILTER)
    ========================================================================== */
 .devotee-sprite {
   display: block;
@@ -403,6 +403,25 @@ body.obs-mode .stage-wrapper {
 
 .central-worshipper.walking-up {
   animation: centralWalkUpCarpet 2.1s linear forwards;
+}
+
+.central-worshipper.vip-ritual::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  bottom: -430px;
+  width: 260px;
+  height: 760px;
+  transform: translateX(-50%);
+  background: linear-gradient(0deg, rgba(255, 180, 45, 0), rgba(255, 218, 115, 0.54), rgba(255, 180, 45, 0));
+  clip-path: polygon(32% 100%, 68% 100%, 56% 0, 44% 0);
+  animation: vipGoldTrail 1.7s ease-in-out infinite;
+}
+
+@keyframes vipGoldTrail {
+  0%, 100% { opacity: 0.35; transform: translateX(-50%) scaleY(0.92); }
+  50% { opacity: 0.9; transform: translateX(-50%) scaleY(1.05); }
 }
 
 @keyframes centralWalkUpCarpet {
@@ -431,14 +450,44 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
 }
 
-.pose-frame[data-pose="walk1"],
-.pose-frame[data-pose="walk2"] {
-  width: 102px;
+.pose-frame[data-pose="salute"] {
+  width: 108px;
   height: 176px;
 }
 
 .pose-frame.active {
   opacity: 1;
+}
+
+/* Nghi thức ôm quyền, cúi chào trang trọng trước Quan Thánh — không quỳ lạy sát đất */
+.pose-frame.quan-thanh-salute {
+  animation: quanThanhSalute 720ms ease-in-out both;
+}
+
+@keyframes quanThanhSalute {
+  0%, 100% { transform: translateX(-50%) rotate(0deg) translateY(0); }
+  46% { transform: translateX(-50%) rotate(7deg) translateY(8px) scale(0.97); }
+  68% { transform: translateX(-50%) rotate(4deg) translateY(4px) scale(0.985); }
+}
+
+.hall-seat .devotee-sprite.quan-thanh-salute,
+.vip-devotee-slot .devotee-sprite.quan-thanh-salute {
+  animation: congregantQuanThanhSalute 760ms ease-in-out both;
+}
+
+.hall-seat--right .devotee-sprite.quan-thanh-salute,
+.vip-devotee-slot--right .devotee-sprite.quan-thanh-salute {
+  animation: congregantQuanThanhSaluteMirrored 760ms ease-in-out both;
+}
+
+@keyframes congregantQuanThanhSalute {
+  0%, 100% { transform: translateY(0) scale(1); }
+  48% { transform: translateY(5px) scale(0.95); }
+}
+
+@keyframes congregantQuanThanhSaluteMirrored {
+  0%, 100% { transform: translateY(0) scaleX(-1) scaleY(1); }
+  48% { transform: translateY(5px) scaleX(-0.95) scaleY(0.95); }
 }
 
 .worshipper-wish-bubble {
@@ -536,8 +585,8 @@ body.obs-mode .stage-wrapper {
 }
 
 .vip-devotee-slot .devotee-sprite {
-  width: 102px;
-  height: 132px;
+  width: 108px;
+  height: 150px;
 }
 
 .vip-rank-pill {
@@ -546,8 +595,9 @@ body.obs-mode .stage-wrapper {
   gap: 5px;
   padding: 3px 10px 3px 4px;
   border-radius: 999px;
-  background: rgba(14, 5, 4, 0.94);
-  border: 1.5px solid var(--gold-main);
+  background: linear-gradient(180deg, #6b2c12 0%, #251006 100%);
+  border: 1.5px solid #f6cc64;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45), inset 0 1px rgba(255, 240, 180, 0.24);
   margin-top: -10px;
   white-space: nowrap;
 }
@@ -574,7 +624,7 @@ body.obs-mode .stage-wrapper {
   text-overflow: ellipsis;
 }
 
-/* 6. ĐẠO TRÀNG NGƯỜI XEM QUỲ LỄ HAI BÊN THẢM ĐỎ (40 CHỖ NGỒI TĨNH SIÊU NHẸ CPU) */
+/* 6. HÀNG THIỆN TÍN ĐỨNG HAI BÊN THẢM ĐỎ (40 VỊ TRÍ NHẸ CPU) */
 .congregation-hall {
   position: absolute;
   inset: 0;
@@ -591,11 +641,41 @@ body.obs-mode .stage-wrapper {
 }
 
 .hall-seat .devotee-sprite {
-  width: 92px;
-  height: 120px;
+  width: 96px;
+  height: 136px;
+}
+
+.waiting-businessman {
+  transform-origin: bottom center;
+  animation: businessmanWait 4.8s ease-in-out infinite;
+}
+
+.hall-seat:nth-child(3n) .waiting-businessman { animation-delay: -1.3s !important; }
+.hall-seat:nth-child(5n) .waiting-businessman { animation-delay: -3.1s !important; }
+
+.hall-seat--right .waiting-businessman,
+.vip-devotee-slot--right .waiting-businessman {
+  animation-name: businessmanWaitMirrored;
+}
+
+@keyframes businessmanWait {
+  0%, 100% { transform: translateY(0) rotate(0deg) scale(1); }
+  40% { transform: translateY(-1px) rotate(-0.6deg) scale(1.012); }
+  55% { transform: translateY(0) rotate(0.8deg) scale(1); }
+  72% { transform: translateY(-2px) rotate(-0.3deg) scale(1.006); }
+}
+
+@keyframes businessmanWaitMirrored {
+  0%, 100% { transform: translateY(0) rotate(0deg) scaleX(-1) scaleY(1); }
+  40% { transform: translateY(-1px) rotate(0.6deg) scaleX(-1.012) scaleY(1.012); }
+  55% { transform: translateY(0) rotate(-0.8deg) scaleX(-1) scaleY(1); }
+  72% { transform: translateY(-2px) rotate(0.3deg) scaleX(-1.006) scaleY(1.006); }
 }
 
 .seat-badge {
+  position: absolute;
+  top: -26px;
+  z-index: 2;
   display: inline-flex;
   align-items: center;
   gap: 5px;

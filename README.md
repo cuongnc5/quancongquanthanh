@@ -1,13 +1,13 @@
-# 🪷 Chùa Linh Ứng Online — TikTok Live RPC (9:16 Interactive Buddhist Sanctuary)
+# ⚔️ Miếu Quan Công Online — TikTok Live RPC (9:16 Interactive Shrine)
 
 Hệ thống phát trực tiếp tương tác (**Interactive TikTok Live Stream & JSON-RPC 2.0**) chuẩn khung dọc **9:16 (`1080×1920`)** dành cho **OBS Studio / TikTok Live Studio**, chạy siêu nhẹ trên **Bun.js** và tích hợp giọng đọc AI tiếng Việt **ZeroTTS (`zeroweight-ai/ZeroTTS`)**.
 
-Người xem trên TikTok Live tương tác trực tiếp qua **Bình luận (Comment)**, **Thả tim (Like)**, **Chia sẻ / Follow** và **Tặng quà (Gift)** để thực hiện các nghi thức tâm linh trên màn hình Chánh Điện **Đức Phật A Di Đà**:
-- 🔥 **Thắp hương & Đảnh lễ Tam Bái (8-Frame Walking & Prostration)**: Nhân vật Phật tử mặc áo lam bước đi từng bước dọc thảm đỏ hoa sen lên trước Lư Hương Đỉnh Đồng, hạ gối quỳ và thực hiện 3 lạy Ngũ thể đầu địa hướng về Đức Phật A Di Đà.
+Người xem trên TikTok Live tương tác trực tiếp qua **Bình luận (Comment)**, **Thả tim (Like)**, **Chia sẻ / Follow** và **Tặng quà (Gift)** để thực hiện nghi thức tại Miếu Quan Công, trước **Quan Thánh Đế Quân**:
+- 🔥 **Thắp hương & Kính lễ Quan Thánh**: Nhân vật thiện tín bước dọc thảm đỏ lên trước lư hương, thành tâm dâng hương và kính lễ Quan Thánh Đế Quân.
 - 🏮 **Thả Đèn Hoa Đăng / Sớ Cầu Nguyện**: Bình luận lời khấn sẽ bay lên thành Đèn Hoa Đăng kèm giọng đọc AI đọc lời cầu nguyện.
 - 🎋 **Xin Xăm / Gieo Quẻ Đầu Năm (Đồng bộ Giọng đọc & Tờ Giải Quẻ)**: Tự động lắc ống xăm và mở tờ Giải Quẻ (Thượng Thượng Cát, Đại Cát, Thượng Cát...) đúng thời điểm giọng đọc bắt đầu vang lên.
-- 🪵 **Gõ Mõ & 🔔 Thỉnh Đại Hồng Chung**: Thả tim gõ mõ tích điểm Công Đức, chia sẻ/follow thỉnh chuông đồng lan tỏa sóng âm vàng và kích hoạt làn sóng vái lạy của 40+ Phật tử trong Đạo Tràng.
-- 📜 **Bảng Vàng Công Đức (`TẤM LÒNG THÀNH` & 6 Đệm Quỳ VIP)**: Vinh danh trực tiếp người xem thật có điểm Công Đức cao nhất trên 6 đệm quỳ gấm đỏ trước bàn thờ Phật.
+- 🪵 **Gõ Mõ & 🔔 Thỉnh Chuông Miếu**: Thả tim gõ mõ tích điểm Công Đức, chia sẻ/follow thỉnh chuông đồng lan tỏa sóng âm vàng và kích hoạt làn sóng kính lễ của thiện tín.
+- 📜 **Bảng Vàng Công Đức (`TẤM LÒNG THÀNH` & 6 Đệm Quỳ VIP)**: Vinh danh trực tiếp người xem có điểm Công Đức cao nhất trước bàn thờ Quan Thánh.
 
 ---
 
@@ -56,7 +56,7 @@ bun install
 
 # Tạo môi trường Python .venv và cài đặt ZeroTTS
 uv venv .venv
-uv pip install --python .venv/bin/python zerotts pillow
+uv pip install --python .venv/bin/python "onnxruntime==1.20.1" zerotts pillow
 ```
 
 ### 3. Khởi chạy Server
@@ -77,14 +77,14 @@ Mặc định server chạy tại cổng `3000`:
 
 | Sự kiện TikTok Live | Điều kiện / Từ khóa | Nghi thức trên Chánh Điện | Điểm Công Đức |
 | :--- | :--- | :--- | :---: |
-| **Thả tim (Like)** | Mỗi đợt thả tim | Gõ mõ gỗ tụng kinh + Làn sóng Phật tử vái lạy | `+1` / tim |
+| **Thả tim (Like)** | Mỗi đợt thả tim | Gõ mõ gỗ + Làn sóng thiện tín kính lễ | `+1` / tim |
 | **Follow / Share** | Theo dõi hoặc chia sẻ | Thỉnh Đại Hồng Chung ngân vang + Sóng âm vàng | `+10` |
-| **Bình luận Thắp hương** | `thắp hương`, `dâng hương`, `bái phật`, `lạy phật` | Phật tử bước dọc thảm đỏ lên trước Lư Hương, quỳ đảnh lễ 3 lạy + Đọc tên khấn | `+15` |
-| **Bình luận Cầu nguyện** | `cầu ...`, `nguyện ...`, `nam mô`, `a di đà phật`, `bình an`, `chúc ...` | Bước lên đảnh lễ + Thả Đèn Hoa Đăng mang lời khấn bay lên trời + Đọc lời cầu nguyện | `+10` |
+| **Bình luận Thắp hương** | `thắp hương`, `dâng hương`, `bái quan`, `kính quan thánh` | Thiện tín bước dọc thảm đỏ lên trước Lư Hương, thành tâm kính lễ + Đọc tên khấn | `+15` |
+| **Bình luận Cầu nguyện** | `cầu ...`, `nguyện ...`, `quan thánh`, `bình an`, `chúc ...` | Bước lên kính lễ + Thả Đèn Hoa Đăng mang lời khấn bay lên trời + Đọc lời cầu nguyện | `+10` |
 | **Bình luận Xin xăm** | `xin xăm`, `gieo quẻ`, `rút quẻ`, `quẻ` | Lắc ống xăm + Mở tờ Giải Quẻ đồng bộ đúng lúc giọng đọc bắt đầu vang lên | `+10` |
 | **Tặng quà Nhỏ (1–4 xu)** | Hoa hồng (Rose), Heart Me... | Bước lên dâng Đài Hoa Sen Vàng + Thắp 3 nén hương + Đọc lời cảm tạ | `+20` / xu |
 | **Tặng quà Vừa (5–99 xu)** | Đèn lưu ly, Mâm ngũ quả... | Dâng Đèn Lưu Ly / Mâm Ngũ Quả + Thỉnh Chuông + Đọc lời chúc phúc | `+30` / xu |
-| **Tặng quà Lớn (≥ 100 xu)** | Quà ≥ 100 xu | **Đại Lễ Kim Long Chầu Phật**: Mưa hoa sen vàng, Hào quang vạn trượng, Chuông đồng ngân vang | `+50` / xu |
+| **Tặng quà Lớn (≥ 100 xu)** | Quà ≥ 100 xu | **Đại Lễ Kim Long Chầu Quan Thánh**: Mưa kim quang, hào quang vạn trượng, chuông miếu ngân vang | `+50` / xu |
 
 ---
 
@@ -141,7 +141,7 @@ curl -X POST http://localhost:3000/rpc \
 - `temple.strikeWoodenFish`: Gõ mõ tích công đức (`user`, `count`).
 - `temple.ringBell`: Thỉnh Đại Hồng Chung (`user`, `count`, `wish`).
 - `temple.offerGift`: Dâng lễ vật (`user`, `giftType`: `lotus` | `fruit` | `lamp` | `dragon`, `coins`, `giftName`).
-- `temple.grandCeremony`: Kích hoạt Đại Lễ Kim Long Chầu Phật (`user`, `coins`, `giftName`).
+- `temple.grandCeremony`: Kích hoạt Đại Lễ Kim Long Chầu Quan Thánh (`user`, `coins`, `giftName`).
 - `temple.updateSettings`: Cập nhật âm lượng nhạc nền (`musicVolume`), giọng đọc (`ttsVolume`), bật/tắt TTS.
 - `temple.resetMerit`: Đặt lại bảng thống kê Công Đức.
 - `live.connect` / `live.disconnect`: Kết nối / Ngắt kết nối phòng TikTok Live.
@@ -161,10 +161,10 @@ curl -X POST http://localhost:3000/rpc \
 │   ├── admin.html             # Trang quản trị JSON-RPC 2.0 đầy đủ
 │   ├── css/live.css           # Stylesheet tối ưu GPU Compositor
 │   ├── js/
-│   │   ├── live.js            # Điều phối 8-frame prostration, Đạo Tràng 40 chỗ ngồi & WebSocket RPC
+│   │   ├── live.js            # Điều phối nghi thức kính bái Quan Thánh, hàng thiện tín & WebSocket RPC
 │   │   ├── particles.js       # 30 FPS Offscreen-Sprite Particle Engine (Khói hương, Hoa sen, Sóng âm)
 │   │   └── audio.js           # Quản lý nhạc nền auto-ducking, Pháp khí Web Audio & hàng đợi đồng bộ TTS
-│   └── assets/                # Hình nền Đức Phật A Di Đà, 8 frame Phật tử áo lam & nhạc nền
+│   └── assets/                # Hình nền Quan Thánh Đế Quân, 8 frame thiện tín & nhạc nền
 └── docs/
     ├── demo/                  # Hình ảnh chụp màn hình demo thực tế
     └── superpowers/specs/     # Tài liệu thiết kế kỹ thuật (Design Spec)
