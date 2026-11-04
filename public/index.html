@@ -18,10 +18,23 @@
       <div class="stage-9x16" id="stage9x16">
         <!-- 1. HÌNH NỀN MIẾU QUAN CÔNG 9:16 -->
         <img
-          src="/assets/quan_cong_stage.png"
+          src="/assets/quan_cong_stage.png?v=20261104"
           alt="Quan Thánh Đế Quân tại Miếu Quan Công"
           class="sanctuary-bg-img"
         />
+
+        <!-- Nội dung vừa khít bảng trống giữa điện thờ trên ảnh nền. -->
+        <section class="center-prayer-guide" aria-label="Hướng dẫn cầu nguyện">
+          <div class="center-prayer-guide-title">THÀNH TÂM KÍNH NGUYỆN</div>
+          <div>💰 Cầu tài lộc &nbsp;•&nbsp; 🛍️ Cầu đắt hàng &nbsp;•&nbsp; 📈 Cầu phát tài</div>
+          <div>🤝 Cầu quý nhân &nbsp;•&nbsp; 💼 Cầu công danh &nbsp;•&nbsp; 🍀 Cầu đổi vận</div>
+          <div>🛡️ Cầu bình an &nbsp;•&nbsp; ⚔️ Tránh thị phi &nbsp;•&nbsp; ❤️ Cầu duyên lành</div>
+        </section>
+
+        <div class="engagement-callout" id="engagementCallout" role="status" aria-live="polite">
+          <span class="engagement-callout-icon">📣</span>
+          <span class="engagement-callout-message" id="engagementCalloutMessage"></span>
+        </div>
 
         <!-- 1B. HÀO QUANG QUAN THÁNH -->
         <div class="hero-aura-system" id="heroAuraSystem">
@@ -240,15 +253,15 @@
 
         <div class="dock-grid-2">
           <button class="dock-btn gold" id="btnRpcIncense">🔥 Thắp 3 Nén Hương</button>
-          <button class="dock-btn prayer-preset-btn" data-effect="wealth" data-prayer="Tiền vào như nước, tài lộc đầy nhà"><strong>💰 Cầu Tài Lộc</strong><small>Tiền vào như nước, tài lộc đầy nhà</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="orders" data-prayer="Đơn về tới tấp, chốt đơn mỏi tay"><strong>🛍️ Cầu Đắt Hàng</strong><small>Đơn về tới tấp, chốt đơn mỏi tay</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="prosperity" data-prayer="Làm ăn phát đạt, lợi nhuận tăng vù vù"><strong>📈 Cầu Phát Tài</strong><small>Làm ăn phát đạt, lợi nhuận tăng vù vù</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="noble" data-prayer="Quý nhân phù trợ, gặp khó hóa may"><strong>🤝 Cầu Quý Nhân</strong><small>Quý nhân phù trợ, gặp khó hóa may</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="career" data-prayer="Sự nghiệp thăng tiến, công thành danh toại"><strong>💼 Cầu Công Danh</strong><small>Sự nghiệp thăng tiến, công thành danh toại</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="turning" data-prayer="Hết vận xui, đón vận đỏ"><strong>🍀 Cầu Đổi Vận</strong><small>Hết vận xui, đón vận đỏ</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="safety" data-prayer="Tai qua nạn khỏi, gia đạo bình an"><strong>🛡️ Cầu Bình An</strong><small>Tai qua nạn khỏi, gia đạo bình an</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="gossip" data-prayer="Tiểu nhân tránh xa, thị phi tan biến"><strong>⚔️ Cầu Tránh Thị Phi</strong><small>Tiểu nhân tránh xa, thị phi tan biến</small></button>
-          <button class="dock-btn prayer-preset-btn" data-effect="love" data-prayer="Gặp người chân thành, tình duyên thuận lợi"><strong>❤️ Cầu Duyên Lành</strong><small>Gặp người chân thành, tình duyên thuận lợi</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="wealth" data-prayer="Ví rung ting ting, tiền về không kịp đếm"><strong>💰 Cầu Tài Lộc</strong><small>Ví rung ting ting, tiền về không kịp đếm</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="orders" data-prayer="Đơn nổ như pháo hoa, chốt đơn mỏi tay"><strong>🛍️ Cầu Đắt Hàng</strong><small>Đơn nổ như pháo hoa, chốt đơn mỏi tay</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="prosperity" data-prayer="Làm ăn lên hương, doanh thu bay vù vù"><strong>📈 Cầu Phát Tài</strong><small>Làm ăn lên hương, doanh thu bay vù vù</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="noble" data-prayer="Quý nhân xuất hiện đúng lúc, deal khó hóa dễ"><strong>🤝 Cầu Quý Nhân</strong><small>Quý nhân xuất hiện đúng lúc, deal khó hóa dễ</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="career" data-prayer="Sếp thấy là mê, công việc thăng hạng"><strong>💼 Cầu Công Danh</strong><small>Sếp thấy là mê, công việc thăng hạng</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="turning" data-prayer="Vía tốt bật mode ON, vận xui xin phép OFF"><strong>🍀 Cầu Đổi Vận</strong><small>Vía tốt bật mode ON, vận xui xin phép OFF</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="safety" data-prayer="Bình an full pin, mọi chuyện mượt như nhạc"><strong>🛡️ Cầu Bình An</strong><small>Bình an full pin, mọi chuyện mượt như nhạc</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="gossip" data-prayer="Thị phi tự né, drama trôi qua như gió"><strong>⚔️ Cầu Tránh Thị Phi</strong><small>Thị phi tự né, drama trôi qua như gió</small></button>
+          <button class="dock-btn prayer-preset-btn" data-effect="love" data-prayer="Gặp đúng người, yêu vui không red flag"><strong>❤️ Cầu Duyên Lành</strong><small>Gặp đúng người, yêu vui không red flag</small></button>
         </div>
         <button class="dock-btn gold" id="btnRpcGrandCeremony">
           🐉 Đại Lễ Kim Long Chầu Quan Thánh (Quà Lớn)
@@ -268,6 +281,6 @@
 
   <script src="/js/audio.js"></script>
   <script src="/js/particles.js?v=20261103-canvas-alpha"></script>
-  <script src="/js/live.js?v=20261103-workspace-fit"></script>
+  <script src="/js/live.js?v=20261104-member-welcome"></script>
 </body>
 </html>

@@ -503,7 +503,7 @@ const DEFAULT_STATE = {
 
     autoSim: false,
 
-    autoSimIntervalMs: 7200,
+    autoSimIntervalMs: 4800,
 
     commentPrayerOne: 'Kính nguyện ngày mới vui vẻ, tinh thần an vui, mọi việc thuận hòa',
 
@@ -517,7 +517,7 @@ const DEFAULT_STATE = {
 
     connecting: false,
 
-    username: 'zenfacts_vn',
+    username: 'cuongeuro6868',
 
     roomId: null,
 
@@ -1675,6 +1675,19 @@ async function connectTikTokLive(usernameOrUrl) {
 
     recordDevotee(user, uniqueId, avatar, 1, 0, 0, 'Đã vào Miếu Quan Công kính lễ Quan Thánh');
 
+    const welcomeMessage = `Kính chào thiện tín ${user} vừa vào Live. Kính mời thiện tín vào Chánh Điện, thành tâm kính lễ Quan Thánh Đế Quân.`;
+    broadcastTempleEvent({
+      id: `welcome_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      timestamp: new Date().toISOString(),
+      type: 'welcomeMember',
+      user,
+      uniqueId,
+      avatar,
+      message: `🙏 Kính chào ${user} — mời vào Chánh Điện kính lễ Quan Thánh`,
+      ttsText: welcomeMessage,
+      ttsVoice: state.settings.ttsVoice || 'maichi'
+    });
+
     broadcastNotification('temple.state');
 
   });
@@ -1870,6 +1883,7 @@ function disconnectTikTokLive() {
 // ============================================================================
 
 let autoSimTimer = null;
+let autoSimPromptTimer = null;
 let simSequence = 0;
 let simNameCursor = 0;
 
@@ -1886,6 +1900,27 @@ const SIM_WISHES = [
   'Kính nguyện sáng suốt khi quyết định, giữ nghĩa tín trong mọi cuộc giao thương',
   'Kính nguyện tài lộc hanh thông, nhân viên đồng lòng, công việc phát triển'
 ];
+
+const SIM_ENGAGEMENT_PROMPTS = [
+  'Mời mọi người mới vào Live ở lại cùng kính lễ Quan Thánh — bình luận lời nguyện để cùng đón bình an.',
+  'Cả nhà hãy để lại một bình luận cầu nguyện cho gia đình, công việc và những điều tốt lành.',
+  'Ai hữu duyên ghé Live, hãy bình luận điều mình mong cầu để cùng thành tâm kính nguyện trước Quan Thánh.',
+  'Mời mọi người vào Live cùng gửi lời cầu phúc — nguyện Quan Thánh phù hộ, ban lộc ban tài theo duyên lành.',
+  'Cả nhà bình luận một lời chúc cho nhau để cùng cầu mua may bán đắt, gia đạo bình an và tâm an mỗi ngày.'
+];
+
+function broadcastSimEngagementPrompt() {
+  const message = SIM_ENGAGEMENT_PROMPTS[Math.floor(Math.random() * SIM_ENGAGEMENT_PROMPTS.length)];
+  broadcastTempleEvent({
+    id: `prompt_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+    timestamp: new Date().toISOString(),
+    type: 'engagementPrompt',
+    message,
+    // Client sẽ đưa câu chào này vào hàng đợi ZeroTTS khi Auto-sim phát lời mời.
+    ttsText: message,
+    ttsVoice: state.settings.ttsVoice || 'maichi'
+  });
+}
 
 // Xáo trước toàn bộ tổ hợp tên: tên mỗi lượt là ngẫu nhiên nhưng không lặp lại.
 const SIM_NAME_POOL = [];
@@ -1950,14 +1985,18 @@ function configureAutoSim(enabled) {
     autoSimTimer = null;
 
   }
+  if (autoSimPromptTimer) {
+    clearTimeout(autoSimPromptTimer);
+    autoSimPromptTimer = null;
+  }
 
   if (state.settings.autoSim) {
 
     runSingleSimulationStep();
 
-    const baseInterval = Math.max(6800, Math.min(7600, Number(state.settings.autoSimIntervalMs) || 7200));
+    const baseInterval = Math.max(4200, Math.min(5400, Number(state.settings.autoSimIntervalMs) || 4800));
     const scheduleNext = () => {
-      const jitter = Math.floor(Math.random() * 801) - 400;
+      const jitter = Math.floor(Math.random() * 1001) - 500;
       autoSimTimer = setTimeout(() => {
         if (!state.settings.autoSim) return;
         runSingleSimulationStep();
@@ -1965,6 +2004,16 @@ function configureAutoSim(enabled) {
       }, baseInterval + jitter);
     };
     scheduleNext();
+
+    const schedulePrompt = (delay) => {
+      autoSimPromptTimer = setTimeout(() => {
+        if (!state.settings.autoSim) return;
+        broadcastSimEngagementPrompt();
+        schedulePrompt(18000 + Math.floor(Math.random() * 14001));
+      }, delay);
+    };
+    // Hiện lời mời đầu tiên sớm để khi bật auto-sim người dẫn có thể thấy ngay.
+    schedulePrompt(4000 + Math.floor(Math.random() * 3001));
 
   }
 
@@ -2346,7 +2395,7 @@ server.listen(PORT, () => {
 
   // Tự động kết nối tới @cuongeuro6868 ngay khi khởi động server
 
-  const defaultChannel = process.env.TIKTOK_USER || state.tiktok?.username || 'zenfacts_vn';
+  const defaultChannel = process.env.TIKTOK_USER || state.tiktok?.username || 'cuongeuro6868';
 
   if (defaultChannel) {
 

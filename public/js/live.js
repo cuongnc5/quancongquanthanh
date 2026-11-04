@@ -251,7 +251,11 @@
       <span class="temple-passer-ribbon"></span>
       <span class="temple-passer-floor-glow"></span>
       <div class="temple-passer-name">${escapeHtml(nextPasserName())}</div>
-      <img src="${SPRITE_FRAMES.waiting}" alt="Doanh nhân vãng lai vào miếu" class="devotee-sprite waiting-businessman" />
+      <div class="temple-passer-sprite-stack" aria-hidden="true">
+        <img src="${SPRITE_FRAMES.waiting}" alt="" class="devotee-sprite passer-walk-pose" />
+        <img src="${SPRITE_FRAMES.standing}" alt="" class="devotee-sprite passer-still-pose" />
+      </div>
+      <div class="temple-passer-footsteps"><i></i><i></i></div>
       <div class="temple-passer-sparks"><i>✦</i><i>✦</i><i>✦</i></div>
     `;
     layer.appendChild(passer);
@@ -286,6 +290,7 @@
   // Preload sprite nghi thức ôm quyền kính bái Quan Thánh.
   const SPRITE_FRAMES = {
     waiting: '/assets/businessman_waiting.png',
+    standing: '/assets/businessman_standing.png',
     incense: '/assets/businessman_incense.png',
     vipIncense: '/assets/vip_businessman_incense.png'
   };
@@ -522,6 +527,7 @@
         : 'MIẾU QUAN CÔNG • QUAN THÁNH ĐẾ QUÂN';
     }
 
+    autoSimEnabled = Boolean(st.settings?.autoSim);
     const btnAutoSim = document.getElementById('btnToggleAutoSim');
     if (btnAutoSim && st.settings) {
       btnAutoSim.textContent = st.settings.autoSim
@@ -585,16 +591,52 @@
   // 7. Xử lý hiệu ứng khi có Nghi Thức mới
   let fortuneTimer = null;
   let grandTimer = null;
+  let engagementCalloutTimer = null;
+  let clientEngagementTimer = null;
+  let autoSimEnabled = false;
+  const LIVE_ENGAGEMENT_PROMPTS = [
+    'Mời mọi người mới vào Live ở lại cùng kính lễ Quan Thánh — bình luận lời nguyện để cùng đón bình an.',
+    'Cả nhà hãy để lại một bình luận cầu nguyện cho gia đình, công việc và những điều tốt lành.',
+    'Ai hữu duyên ghé Live, hãy bình luận điều mình mong cầu để cùng thành tâm kính nguyện trước Quan Thánh.',
+    'Mời mọi người vào Live cùng gửi lời cầu phúc — nguyện Quan Thánh phù hộ, ban lộc ban tài theo duyên lành.',
+    'Cả nhà bình luận một lời chúc cho nhau để cùng cầu mua may bán đắt, gia đạo bình an và tâm an mỗi ngày.'
+  ];
+
+  function showEngagementCallout(message) {
+    const callout = document.getElementById('engagementCallout');
+    const messageEl = document.getElementById('engagementCalloutMessage');
+    if (!callout || !messageEl || !message) return;
+    messageEl.textContent = message;
+    callout.classList.remove('visible');
+    void callout.offsetWidth;
+    callout.classList.add('visible');
+    clearTimeout(engagementCalloutTimer);
+    engagementCalloutTimer = setTimeout(() => callout.classList.remove('visible'), 7600);
+  }
+
+  // Giữ lời mời hiện đều khi Live thật đang chạy, không phụ thuộc chế độ giả lập.
+  function scheduleLiveEngagementCallout(delay = 5000) {
+    clearTimeout(clientEngagementTimer);
+    clientEngagementTimer = setTimeout(() => {
+      if (!autoSimEnabled) {
+        const message = LIVE_ENGAGEMENT_PROMPTS[Math.floor(Math.random() * LIVE_ENGAGEMENT_PROMPTS.length)];
+        showEngagementCallout(message);
+      }
+      scheduleLiveEngagementCallout(18000 + Math.floor(Math.random() * 14001));
+    }, delay);
+  }
+
+  scheduleLiveEngagementCallout();
   const PRAYER_EFFECT_BY_WISH = {
-    'tiền vào như nước, tài lộc đầy nhà': 'wealth',
-    'đơn về tới tấp, chốt đơn mỏi tay': 'orders',
-    'làm ăn phát đạt, lợi nhuận tăng vù vù': 'prosperity',
-    'quý nhân phù trợ, gặp khó hóa may': 'noble',
-    'sự nghiệp thăng tiến, công thành danh toại': 'career',
-    'hết vận xui, đón vận đỏ': 'turning',
-    'tai qua nạn khỏi, gia đạo bình an': 'safety',
-    'tiểu nhân tránh xa, thị phi tan biến': 'gossip',
-    'gặp người chân thành, tình duyên thuận lợi': 'love'
+    'ví rung ting ting, tiền về không kịp đếm': 'wealth',
+    'đơn nổ như pháo hoa, chốt đơn mỏi tay': 'orders',
+    'làm ăn lên hương, doanh thu bay vù vù': 'prosperity',
+    'quý nhân xuất hiện đúng lúc, deal khó hóa dễ': 'noble',
+    'sếp thấy là mê, công việc thăng hạng': 'career',
+    'vía tốt bật mode on, vận xui xin phép off': 'turning',
+    'bình an full pin, mọi chuyện mượt như nhạc': 'safety',
+    'thị phi tự né, drama trôi qua như gió': 'gossip',
+    'gặp đúng người, yêu vui không red flag': 'love'
   };
 
   function spawnPrayerEffect(wish) {
@@ -638,6 +680,15 @@
     }
 
     switch (ev.type) {
+      case 'engagementPrompt': {
+        showEngagementCallout(ev.message);
+        break;
+      }
+      case 'welcomeMember': {
+        showEngagementCallout(ev.message);
+        particles.spawnBellWave(540, 835, 1);
+        break;
+      }
       case 'burnIncense': {
         audio.playIncenseChime();
         particles.spawnIncenseBurst(540, 895);

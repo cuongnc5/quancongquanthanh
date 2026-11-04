@@ -101,6 +101,73 @@ body.obs-mode .stage-wrapper {
   pointer-events: none;
 }
 
+/* Chữ đặt trên bảng trống ở giữa nền điện thờ. */
+.center-prayer-guide {
+  position: absolute;
+  z-index: 10;
+  left: 50%;
+  top: 1278px;
+  width: 610px;
+  transform: translateX(-50%);
+  color: #ffe8a2;
+  font-family: 'Noto Serif', serif;
+  font-size: 17px;
+  font-weight: 700;
+  line-height: 1.55;
+  letter-spacing: .15px;
+  text-align: center;
+  text-shadow: 0 2px 2px rgba(35, 4, 2, .9);
+  pointer-events: none;
+}
+.center-prayer-guide-title {
+  margin-bottom: 4px;
+  color: #fff1b9;
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 1.8px;
+}
+
+/* Lời mời tương tác ngẫu nhiên: tách riêng để người xem Live không bỏ lỡ. */
+.engagement-callout {
+  position: absolute;
+  z-index: 22;
+  left: 50%;
+  top: 1462px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 710px;
+  min-height: 68px;
+  padding: 12px 24px;
+  border: 1.5px solid rgba(255, 222, 116, .9);
+  border-radius: 18px;
+  background: linear-gradient(90deg, rgba(78, 15, 7, .96), rgba(135, 43, 10, .96), rgba(78, 15, 7, .96));
+  box-shadow: 0 8px 22px rgba(35, 3, 1, .52), inset 0 1px rgba(255, 244, 179, .36);
+  color: #fff1ba;
+  font-size: 19px;
+  font-weight: 800;
+  line-height: 1.35;
+  text-align: center;
+  transform: translate3d(-50%, 22px, 0) scale(.96);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .28s ease, transform .32s cubic-bezier(.22,.8,.26,1);
+}
+.engagement-callout.visible {
+  opacity: 1;
+  transform: translate3d(-50%, 0, 0) scale(1);
+  animation: engagementCalloutGlow 1.5s ease-in-out infinite alternate;
+}
+.engagement-callout-icon {
+  flex: 0 0 auto;
+  font-size: 28px;
+}
+.engagement-callout-message { flex: 1; }
+@keyframes engagementCalloutGlow {
+  from { border-color: rgba(255, 222, 116, .68); box-shadow: 0 8px 22px rgba(35, 3, 1, .52), 0 0 0 rgba(255, 201, 62, 0); }
+  to { border-color: #fff0ae; box-shadow: 0 8px 22px rgba(35, 3, 1, .52), 0 0 24px rgba(255, 201, 62, .48); }
+}
+
 /* 1B. HÀO QUANG QUAN THÁNH — TỐI ƯU HÓA CPU (KHÔNG DÙNG FILTER:BLUR) */
 .hero-aura-system {
   position: absolute;
@@ -230,7 +297,7 @@ body.obs-mode .stage-wrapper {
 /* 2. THANH TRẠNG THÁI MỎNG TRÊN ĐỈNH (KHÔNG DÙNG BACKDROP-FILTER) */
 .minimal-top-bar {
   position: absolute;
-  top: 18px;
+  top: 120px;
   left: 338px;
   right: 338px;
   z-index: 20;
@@ -246,7 +313,7 @@ body.obs-mode .stage-wrapper {
 .top-left-panel {
   position: absolute;
   z-index: 21;
-  top: 18px;
+  top: 120px;
   left: 24px;
   width: 294px;
   display: flex;
@@ -927,14 +994,26 @@ body.obs-mode .stage-wrapper {
   opacity: 0;
   will-change: transform, opacity;
 }
-.temple-passer .devotee-sprite {
+.temple-passer-sprite-stack {
   position: relative;
   z-index: 2;
   width: 118px;
   height: 185px;
+}
+.temple-passer .devotee-sprite {
+  position: absolute;
+  inset: 0;
+  width: 118px;
+  height: 185px;
   object-fit: contain;
   transform-origin: bottom center;
+}
+.temple-passer .passer-walk-pose {
   animation: passerCeremonialWalk 15.6s ease-in-out both;
+}
+.temple-passer .passer-still-pose {
+  opacity: 0;
+  animation: passerPrayerPause 15.6s ease-in-out both;
 }
 .temple-passer--left {
   left: 185px;
@@ -944,8 +1023,11 @@ body.obs-mode .stage-wrapper {
   left: 895px;
   animation: passerCrossFromRight 15.6s cubic-bezier(.25,.72,.25,1) forwards;
 }
-.temple-passer--right .devotee-sprite {
+.temple-passer--right .passer-walk-pose {
   animation-name: passerCeremonialWalkMirrored;
+}
+.temple-passer--right .passer-still-pose {
+  animation-name: passerPrayerPauseMirrored;
 }
 .temple-passer-name {
   position: relative;
@@ -989,6 +1071,28 @@ body.obs-mode .stage-wrapper {
   background: radial-gradient(ellipse, rgba(255, 218, 112, .7), rgba(255, 163, 45, .14) 48%, transparent 72%);
   animation: passerFloorGlow 15.6s ease-in-out both;
 }
+.temple-passer-footsteps {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 0;
+  width: 92px;
+  height: 48px;
+  transform: translateX(-50%);
+  animation: passerFootstepsPresence 15.6s ease-in-out both;
+}
+.temple-passer-footsteps i {
+  position: absolute;
+  bottom: 7px;
+  width: 27px;
+  height: 11px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(255, 232, 158, .92), rgba(255, 184, 55, .2) 54%, transparent 72%);
+  opacity: 0;
+  animation: passerFootstep 1.08s ease-in-out infinite;
+}
+.temple-passer-footsteps i:first-child { left: 8px; }
+.temple-passer-footsteps i:last-child { right: 8px; animation-delay: .54s; }
 .temple-passer-sparks {
   position: absolute;
   z-index: 4;
@@ -1028,22 +1132,44 @@ body.obs-mode .stage-wrapper {
   100% { opacity: 0; transform: translate3d(-675px, 390px, 0) scale(.52); }
 }
 @keyframes passerCeremonialWalk {
-  0%, 10% { transform: translateY(0) rotate(-1.5deg); }
-  22%, 36% { transform: translateY(-5px) rotate(1.5deg); }
-  49% { transform: translateY(0) rotate(0); }
-  55% { transform: translateY(9px) scale(.95) rotate(5deg); }
-  61% { transform: translateY(0) scale(1) rotate(0); }
-  77%, 90% { transform: translateY(-5px) rotate(-1.4deg); }
-  100% { transform: translateY(0) rotate(1.4deg); }
+  0%, 10% { opacity: 1; transform: translateY(0) rotate(-1.5deg); }
+  22%, 36% { opacity: 1; transform: translateY(-5px) rotate(1.5deg); }
+  46% { opacity: 1; transform: translateY(0) rotate(0); }
+  49%, 69% { opacity: 0; transform: translateY(0) rotate(0); }
+  72% { opacity: 1; transform: translateY(0) rotate(0); }
+  77%, 90% { opacity: 1; transform: translateY(-5px) rotate(-1.4deg); }
+  100% { opacity: 1; transform: translateY(0) rotate(1.4deg); }
 }
 @keyframes passerCeremonialWalkMirrored {
-  0%, 10% { transform: scaleX(-1) translateY(0) rotate(-1.5deg); }
-  22%, 36% { transform: scaleX(-1) translateY(-5px) rotate(1.5deg); }
-  49% { transform: scaleX(-1) translateY(0) rotate(0); }
-  55% { transform: scaleX(-1) translateY(9px) scale(.95) rotate(5deg); }
-  61% { transform: scaleX(-1) translateY(0) scale(1) rotate(0); }
-  77%, 90% { transform: scaleX(-1) translateY(-5px) rotate(-1.4deg); }
-  100% { transform: scaleX(-1) translateY(0) rotate(1.4deg); }
+  0%, 10% { opacity: 1; transform: scaleX(-1) translateY(0) rotate(-1.5deg); }
+  22%, 36% { opacity: 1; transform: scaleX(-1) translateY(-5px) rotate(1.5deg); }
+  46% { opacity: 1; transform: scaleX(-1) translateY(0) rotate(0); }
+  49%, 69% { opacity: 0; transform: scaleX(-1) translateY(0) rotate(0); }
+  72% { opacity: 1; transform: scaleX(-1) translateY(0) rotate(0); }
+  77%, 90% { opacity: 1; transform: scaleX(-1) translateY(-5px) rotate(-1.4deg); }
+  100% { opacity: 1; transform: scaleX(-1) translateY(0) rotate(1.4deg); }
+}
+@keyframes passerPrayerPause {
+  0%, 46%, 72%, 100% { opacity: 0; transform: translateY(0) scale(1); }
+  49%, 69% { opacity: 1; transform: translateY(0) scale(1); }
+  55%, 63% { opacity: 1; transform: translateY(-2px) scale(1.008); }
+}
+@keyframes passerPrayerPauseMirrored {
+  0%, 46%, 72%, 100% { opacity: 0; transform: scaleX(-1) translateY(0) scaleY(1); }
+  49%, 69% { opacity: 1; transform: scaleX(-1) translateY(0) scaleY(1); }
+  55%, 63% { opacity: 1; transform: scaleX(-1) translateY(-2px) scaleY(1.008); }
+}
+@keyframes passerFootstep {
+  0%, 100% { opacity: 0; transform: translateY(3px) scale(.6); }
+  26% { opacity: .9; transform: translateY(0) scale(1); }
+  57% { opacity: .2; transform: translateY(-3px) scale(.85); }
+}
+@keyframes passerFootstepsPresence {
+  0%, 7% { opacity: 0; }
+  12%, 46% { opacity: 1; }
+  49%, 70% { opacity: 0; }
+  74%, 94% { opacity: 1; }
+  100% { opacity: 0; }
 }
 @keyframes passerRibbonFlow {
   0%, 17% { opacity: 0; transform: translateX(-50%) perspective(320px) rotateX(64deg) scaleY(.2); }
@@ -1381,7 +1507,7 @@ body.obs-mode .stage-wrapper {
 /* Bảng Công Đức ở góc trên bên phải. */
 .hud-right-leaderboard {
   position: absolute;
-  top: 18px;
+  top: 120px;
   right: 24px;
   width: 294px;
   z-index: 21;
@@ -1756,9 +1882,16 @@ body.obs-mode .stage-wrapper {
   .quick-dock {
     display: none;
   }
-  /* Tạo khoảng thở ở mép trên/trái, tránh bị cắt bởi bo viền và safe area iPhone. */
+  /* Chừa vùng Dynamic Island/tai thỏ và thêm 20px khoảng thở cho toàn bộ cụm phía trên. */
   .top-left-panel {
-    top: calc(46px + env(safe-area-inset-top));
+    top: calc(120px + env(safe-area-inset-top));
     left: calc(38px + env(safe-area-inset-left));
+  }
+  .minimal-top-bar {
+    top: calc(120px + env(safe-area-inset-top));
+  }
+  .hud-right-leaderboard {
+    top: calc(120px + env(safe-area-inset-top));
+    right: calc(38px + env(safe-area-inset-right));
   }
 }
